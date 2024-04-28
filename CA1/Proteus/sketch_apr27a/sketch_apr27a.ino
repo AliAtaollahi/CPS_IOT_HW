@@ -69,6 +69,9 @@ void loop() {
         digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, HIGH);
         doorServo.write(0);
+        delay(500);
+        digitalWrite(RED_LED, LOW);
+        doorOpen = false;
       }
       inputString = "";
     }
