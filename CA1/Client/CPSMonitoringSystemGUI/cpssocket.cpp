@@ -31,11 +31,20 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
         QString message = username + ":" + password;
 
         // Send the message to the server
-        qDebug() << "Connected to server. Sending message: " << message;
+        QTextStream(stdout) << "Connected to server. Sending message: " << message << Qt::endl;
         socket->write(message.toUtf8());
+        if (socket->waitForReadyRead()) {
+            // Read the response from the server
+            QByteArray responseData = socket->readAll();
+            QTextStream(stdout) << "Received response from server:" << responseData << Qt::endl;
+            // Process the response as needed
+        } else {
+            // Failed to receive response within the timeout
+            QTextStream(stdout) << "Timeout while waiting for server response" << Qt::endl;
+        }
     } else {
         QTextStream(stdout) << "hello4" << Qt::endl;
         // Connection failed
-        qDebug() << "Failed to connect to server:" << socket->errorString();
+        QTextStream(stdout) << "Failed to connect to server:" << socket->errorString() << Qt::endl;
     }
 }

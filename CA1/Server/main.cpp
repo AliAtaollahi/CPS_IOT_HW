@@ -22,6 +22,31 @@ protected:
             while (clientSocket->bytesAvailable()) {
                 QByteArray data = clientSocket->readAll();
                 qDebug() << "Received:" << data;
+                // Split the message using ':'
+                QList<QByteArray> parts = data.split(':');
+
+                // Check if there are at least two parts
+                if (parts.size() >= 2) {
+                    // Extract the username and password
+                    QString username = QString::fromUtf8(parts[0]);
+                    QString password = QString::fromUtf8(parts[1]);
+
+                    // Check if the username and password match the fixed strings
+                    if (username == "test" && password == "1234") {
+                        qDebug() << "Access granted for:" << username;
+                        clientSocket->write("Access granted\n"); // Send a message indicating access granted
+                        // Process further actions for authenticated client
+                    } else {
+                        qDebug() << "Access denied for:" << username;
+                        clientSocket->write("Access denied\n"); // Send a message indicating access denied
+                        clientSocket->close(); // Close the connection
+                    }
+
+                    // Do something with the username and password
+                    qDebug() << "Username:" << username << "Password:" << password;
+                } else {
+                    qDebug() << "Invalid message format";
+                }
                 clientSocket->write(data); // Echo back
             }
         });
