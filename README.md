@@ -41,3 +41,28 @@ This project develops a system to control the entry and exit of individuals in a
 3. **Monitoring System:**
    - Use Qt Creator to develop the GUI.
    - Implement the WebSocket client in the GUI to receive updates from the web server.
+
+## Project Directory Structure and Contents
+
+### Proteus Folder
+This folder holds simulation files for Proteus software, allowing us to simulate the hardware setup virtually. Here's a detailed description of the simulation setup:
+
+1. **Simulation Environment**:
+   - The Proteus project file, **CPS CA1.pdsprj**, provides the simulation environment where we can visualize and test the behavior of the IoT-based entry and exit management system.
+
+2. **Components**:
+   - **Terminal for Entering RFID Tag**: This component simulates the RFID tag reader terminal where individuals can tap their RFID cards for authentication. In the simulation, we can input RFID tag data to emulate different user interactions.
+   
+   - **Arduino Board**: The Arduino microcontroller is simulated to execute the control logic for the entry and exit management system. It interfaces with the RFID reader, servo motor, LEDs, and Ethernet module to perform authentication and control door access.
+   
+   - **ENC28J60 Ethernet Module**: This module is simulated to provide Ethernet connectivity for the Arduino board. It enables communication between the Arduino and the cloud-based server for authentication and data transmission.
+   
+   - **Servo Motor for Door Control**: The servo motor is simulated to mimic the physical door mechanism controlled by the Arduino board. In the simulation, we can observe how the servo motor responds to commands from the Arduino, such as opening and closing the door.
+   
+   - **LEDs for Status Indication**: LED components are included in the simulation to visually represent the status of access control operations. Green LEDs indicate access granted, while red LEDs indicate access denied.
+
+
+This comprehensive simulation environment allows us to test and validate the functionality of the IoT-based entry and exit management system before deploying it in a real-world environment. It enables thorough testing of various scenarios and interactions to ensure the system operates reliably and efficiently.
+
+
+
