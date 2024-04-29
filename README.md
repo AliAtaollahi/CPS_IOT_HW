@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project develops a system to control the entry and exit of individuals in a company using IoT technologies. The system utilizes RFID for identification and an Arduino board equipped with an ESP8266 WiFi module to handle door mechanisms and data transmission. A simple web server is implemented in the cloud to manage access permissions, and a monitoring system is set up to track and display entry events.
+This project develops a system to control the entry and exit of individuals in a company using IoT technologies. The system utilizes RFID for identification and an Arduino board equipped with an ENC28J60 Ethernet module to handle door mechanisms and data transmission. A simple web server is implemented in the cloud to manage access permissions, and a monitoring system is set up to track and display entry events.
 
 ## Features
 
@@ -17,7 +17,7 @@ This project develops a system to control the entry and exit of individuals in a
 
 - RFID sensor and tags
 - Arduino board
-- ESP8266 WiFi module
+- ENC28J60 Ethernet module
 - Servo motor for door control
 - LEDs for status indication (green for access granted, red for denied)
 
@@ -31,12 +31,12 @@ This project develops a system to control the entry and exit of individuals in a
 
 1. **Arduino Setup:**
    - Install the Arduino IDE and load the provided script.
-   - Connect the ESP8266 module and configure it for WiFi access.
+   - Connect the ENC28J60 module and configure it for Ethernet access.
    - Attach the RFID sensor, servo motor, and LEDs as per the circuit diagram provided.
 
 2. **Web Server Implementation:**
    - Set up a basic HTTP server that can handle requests and send responses to the Arduino board.
-   - Ensure the server can perform updates using WebSockets.
+   - Ensure the server can perform updates on client using WebSockets.
 
 3. **Monitoring System:**
    - Use Qt Creator to develop the GUI.
