@@ -19,7 +19,7 @@ Application::Application(QObject *parent)
 
 
     // TODO:
-    // QObject::connect(&YourSocketClassInstance, &YourSocketClass::newUser, &window, &MainWindow::showUserDetails);
+     QObject::connect(_socket, &CPSSocket::newUser, _window, &MainWindow::showUserDetails);
     // QObject::connect(&window, &MainWindow::connectBtnClicked, &YourSocketClassInstance, &YourSocketClass::connectToServer);
     // QObject::connect(&YourSocketClassInstance, &YourSocketClass::connectionChanged, &window, &MainWindow::changeRightPanelEnabled);
 

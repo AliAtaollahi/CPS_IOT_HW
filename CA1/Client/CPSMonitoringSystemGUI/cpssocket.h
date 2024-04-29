@@ -12,9 +12,15 @@ public:
 
 public slots:
     void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
+    void collectingNewData(); // Method to collect new data
 
 private:
     QTcpSocket *socket;
+
+signals:
+    void newUser(const QString &username, const QString &date, const QString &time);
+
+
 };
 
 #endif // CPSSOCKET_H

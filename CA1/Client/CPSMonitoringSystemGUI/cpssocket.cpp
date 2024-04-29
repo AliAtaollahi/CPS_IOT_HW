@@ -1,24 +1,12 @@
 // cpssocket.cpp
 #include "cpssocket.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 CPSSocket::CPSSocket(QObject *parent) : QObject(parent) {
     socket = new QTcpSocket(this);
+    connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
 }
-
-/*void CPSSocket::connectToServer() {
-    socket->connectToHost("127.0.0.1", 5050);
-    QTextStream(stdout) << "hello2" << Qt::endl;
-    if (socket->waitForConnected()) {
-
-        qDebug() << "Connected to server.";
-        socket->write("Hello server!");
-    } else {
-
-        qDebug() << "Failed to connect to server:" << socket->errorString();
-    }
-
-
-}*/
 
 void CPSSocket::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
     // Connect to the server
@@ -37,6 +25,11 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
             // Read the response from the server
             QByteArray responseData = socket->readAll();
             QTextStream(stdout) << "Received response from server:" << responseData << Qt::endl;
+
+            if(responseData == "Access granted")
+            {
+                collectingNewData();
+            }
             // Process the response as needed
         } else {
             // Failed to receive response within the timeout
@@ -46,5 +39,27 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
         QTextStream(stdout) << "hello4" << Qt::endl;
         // Connection failed
         QTextStream(stdout) << "Failed to connect to server:" << socket->errorString() << Qt::endl;
+    }
+}
+
+void CPSSocket::collectingNewData() {
+
+    // Read the data from the socket
+    QByteArray responseData = socket->readAll();
+
+    // Parse the JSON data
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(responseData);
+    if (!jsonDocument.isNull() && jsonDocument.isObject()) {
+        QJsonObject jsonObject = jsonDocument.object();
+
+        // Extract username, date, and time from the JSON object
+        QString username = jsonObject["username"].toString();
+        QString date = jsonObject["date"].toString();
+        QString time = jsonObject["time"].toString();
+
+        // Emit the newUser signal with the extracted username, date, and time
+        emit newUser(username, date, time);
+    } else {
+        qDebug() << "Failed to parse JSON data";
     }
 }
