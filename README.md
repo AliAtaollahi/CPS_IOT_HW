@@ -44,11 +44,6 @@ This project develops a system to control the entry and exit of individuals in a
 
 ## Flowchart
 <img src="CA1/Pics/Flowchart.png" alt="flowchart" width="50%">
-To describe the flowchart you've added to your README for the IoT-based Access Control System, you can provide a narrative that outlines each step depicted. Here's a description you can use:
-
----
-
-### System Operation Flowchart
 
 The flowchart provides a visual guide to the sequence of operations when an individual attempts to enter the premises using our IoT-based Access Control System. Below is the detailed process as shown in the flowchart:
 
