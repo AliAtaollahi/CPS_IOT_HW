@@ -3,6 +3,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mmc:Q_OBJECT
  mid:main.moc
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QCoreApplication
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QDateTime
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QDebug
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/q20memory.h
@@ -22,6 +23,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayalgorithms.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qbytearraylist.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayview.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcalendar.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qchar.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcompare.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcompare_impl.h
@@ -38,6 +40,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcoreevent.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdarwinhelpers.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdatastream.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdatetime.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdebug.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qelapsedtimer.h
@@ -59,6 +62,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlist.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlocale.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlogging.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qmalloc.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qmap.h

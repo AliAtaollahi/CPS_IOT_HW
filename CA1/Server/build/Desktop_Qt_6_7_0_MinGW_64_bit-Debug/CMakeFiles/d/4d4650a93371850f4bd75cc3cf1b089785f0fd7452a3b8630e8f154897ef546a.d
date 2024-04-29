@@ -1,5 +1,6 @@
 server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/QCoreApplication \
+  D:/qt/6.7.0/mingw_64/include/QtCore/QDateTime \
   D:/qt/6.7.0/mingw_64/include/QtCore/QDebug \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20memory.h \
@@ -19,6 +20,7 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayalgorithms.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qbytearraylist.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayview.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qcalendar.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qchar.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcompare.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcompare_impl.h \
@@ -35,6 +37,7 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcoreevent.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdarwinhelpers.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdatastream.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qdatetime.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdeadlinetimer.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdebug.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qelapsedtimer.h \
@@ -56,6 +59,7 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlist.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qlocale.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlogging.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qmalloc.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qmap.h \

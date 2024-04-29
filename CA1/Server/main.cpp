@@ -2,11 +2,19 @@
 #include <QTcpSocket>
 #include <QDebug>
 #include <QCoreApplication>
+#include <QDateTime>
 
 class Server : public QTcpServer {
     Q_OBJECT
 public:
-    Server(QObject *parent = nullptr) : QTcpServer(parent) {}
+    Server(QObject *parent = nullptr) : QTcpServer(parent) {
+        // Initialize the set of hardcoded RFID values
+        hardcodedRFIDs << "RFID1" << "RFID2" << "RFID3";
+    }
+
+    bool isValidRFID(const QString &rfid) {
+        return hardcodedRFIDs.contains(rfid);
+    }
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override {
@@ -18,37 +26,12 @@ protected:
 
         qDebug() << "New connection from:" << clientSocket->peerAddress().toString();
 
-        connect(clientSocket, &QTcpSocket::readyRead, this, [clientSocket]() {
-            while (clientSocket->bytesAvailable()) {
-                QByteArray data = clientSocket->readAll();
-                qDebug() << "Received:" << data;
-                // Split the message using ':'
-                QList<QByteArray> parts = data.split(':');
+        connect(clientSocket, &QTcpSocket::readyRead, this, [this, clientSocket]() {
 
-                // Check if there are at least two parts
-                if (parts.size() >= 2) {
-                    // Extract the username and password
-                    QString username = QString::fromUtf8(parts[0]);
-                    QString password = QString::fromUtf8(parts[1]);
+        QByteArray data = clientSocket->readAll();
+        qDebug() << "Received:" << data;
+        processUserData(data, clientSocket);
 
-                    // Check if the username and password match the fixed strings
-                    if (username == "test" && password == "1234") {
-                        qDebug() << "Access granted for:" << username;
-                        clientSocket->write("Access granted\n"); // Send a message indicating access granted
-                        // Process further actions for authenticated client
-                    } else {
-                        qDebug() << "Access denied for:" << username;
-                        clientSocket->write("Access denied\n"); // Send a message indicating access denied
-                        clientSocket->close(); // Close the connection
-                    }
-
-                    // Do something with the username and password
-                    qDebug() << "Username:" << username << "Password:" << password;
-                } else {
-                    qDebug() << "Invalid message format";
-                }
-                clientSocket->write(data); // Echo back
-            }
         });
 
         connect(clientSocket, &QTcpSocket::disconnected, this, [clientSocket]() {
@@ -56,6 +39,57 @@ protected:
             clientSocket->deleteLater();
         });
     }
+private:
+    QStringList hardcodedRFIDs;
+    QTcpSocket* clientSocketpointer; // Store pointer to client socket
+
+    void processUserData(const QByteArray &data, QTcpSocket *clientSocket) {
+        QList<QByteArray> parts = data.split(':');
+        if (parts.size() >= 2) {
+            QString username = QString::fromUtf8(parts[0]);
+            QString password = QString::fromUtf8(parts[1]);
+            bool isValid = isValidUser(username, password);
+            if (isValid) {
+                qDebug() << "Access granted for:" << username;
+                this->clientSocketpointer = clientSocket;
+                clientSocket->write("Access granted\n");
+            } else {
+                qDebug() << "Access denied for:" << username;
+                clientSocket->write("Access denied\n");
+                clientSocket->close();
+            }
+            qDebug() << "Username:" << username << "Password:" << password;
+        } else {
+            qDebug() << "Invalid message format";
+        }
+    }
+
+    bool isValidUser(const QString &username, const QString &password) {
+        return (username == "test" && password == "1234");
+    }
+
+    void sendWebSocketMessage(const QString &rfid) {
+        // Construct message with RFID and date/time
+        // Get current date and time
+        QDateTime currentDateTime = QDateTime::currentDateTime();
+        QString dateTimeString = currentDateTime.toString("yyyy-MM-dd HH:mm:ss");
+
+        // Construct message with RFID and date/time
+        QString message = QString("RFID: %1, Date/Time: %2").arg(rfid).arg(dateTimeString);
+
+        QByteArray data = message.toUtf8();
+
+        // Write the data to the socket
+        qint64 bytesWritten = clientSocketpointer->write(data);
+
+        if (bytesWritten == -1) {
+            // Error handling: failed to write data
+            qDebug() << "Failed to write data to socket:" << clientSocketpointer->errorString();
+        } else {
+            qDebug() << "WebSocket message sent to client:" << message;
+        }
+
+}
 };
 
 int main(int argc, char *argv[]) {
