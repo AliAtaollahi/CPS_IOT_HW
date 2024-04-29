@@ -44,6 +44,31 @@ This project develops a system to control the entry and exit of individuals in a
 
 ## Flowchart
 <img src="CA1/Pics/Flowchart.png" alt="flowchart" width="50%">
+To describe the flowchart you've added to your README for the IoT-based Access Control System, you can provide a narrative that outlines each step depicted. Here's a description you can use:
+
+---
+
+### System Operation Flowchart
+
+The flowchart provides a visual guide to the sequence of operations when an individual attempts to enter the premises using our IoT-based Access Control System. Below is the detailed process as shown in the flowchart:
+
+1. **Start (Setup)**: The system initializes and sets the RFID reader to standby mode, preparing to detect any RFID tag presented by an individual trying to gain entry.
+
+2. **RFID Tag Detection**: When a person approaches, the system checks if the door is closed and then waits for an RFID signal. If a tag is present, it reads the information from the RFID tag.
+
+3. **Data Handling**: Once the RFID reader detects a tag, it sends the data to the Arduino board, which then transmits this information to the cloud for authentication.
+
+4. **Cloud-Based Authentication**: The cloud server receives the RFID data and authenticates the identity of the individual by comparing the received data against a list of authorized IDs.
+
+5. **Response and Action**: Upon authentication, the cloud sends the identity information to the monitoring system, displaying all details and saving the event in the system's history. It also sends the authentication result back to the Arduino board to take the appropriate action.
+
+6. **Access Control Decision**:
+   - **Granting Access**: If authentication is successful, the Arduino commands the servo motor to open the door for 30 seconds, the LED indicator turns green, and the individual’s information is displayed on the monitor.
+   - **Denying Access**: If authentication fails, the system will not open the door; the LED indicator turns red, and an "Access Denied" message is displayed.
+
+7. **Closing the Door**: If the door was opened, it is programmed to close automatically after 30 seconds or immediately if required for security reasons.
+
+8. **End**: The flow concludes once the door is securely closed or the denied access protocol is completed.
 
 ## Project Directory Structure and Contents
 ### Proteus Folder
