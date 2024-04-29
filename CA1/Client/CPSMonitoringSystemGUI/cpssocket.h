@@ -19,6 +19,7 @@ private:
 
 signals:
     void newUser(const QString &username, const QString &date, const QString &time);
+    void connectionChanged(bool enabled);
 
 
 };

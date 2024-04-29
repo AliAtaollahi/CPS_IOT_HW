@@ -45,17 +45,19 @@ private:
 
     void processUserData(const QByteArray &data, QTcpSocket *clientSocket) {
         QList<QByteArray> parts = data.split(':');
+
         if (parts.size() >= 2) {
             QString username = QString::fromUtf8(parts[0]);
             QString password = QString::fromUtf8(parts[1]);
             bool isValid = isValidUser(username, password);
             if (isValid) {
+
+                //this->clientSocketpointer = clientSocket;
+                clientSocket->write("1");
                 qDebug() << "Access granted for:" << username;
-                this->clientSocketpointer = clientSocket;
-                clientSocket->write("Access granted\n");
             } else {
                 qDebug() << "Access denied for:" << username;
-                clientSocket->write("Access denied\n");
+                clientSocket->write("0");
                 clientSocket->close();
             }
             qDebug() << "Username:" << username << "Password:" << password;

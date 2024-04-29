@@ -41,6 +41,8 @@ constexpr auto qt_meta_stringdata_CLASSCPSSocketENDCLASS = QtMocHelpers::stringD
     "username",
     "date",
     "time",
+    "connectionChanged",
+    "enabled",
     "connectToServer",
     "serverAddress",
     "password",
@@ -57,25 +59,27 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSCPSSocketENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-       3,   14, // methods
+       4,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
-       1,       // signalCount
+       2,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    3,   32,    2, 0x06,    1 /* Public */,
+       1,    3,   38,    2, 0x06,    1 /* Public */,
+       6,    1,   45,    2, 0x06,    5 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       6,    3,   39,    2, 0x0a,    5 /* Public */,
-       9,    0,   46,    2, 0x0a,    9 /* Public */,
+       8,    3,   48,    2, 0x0a,    7 /* Public */,
+      11,    0,   55,    2, 0x0a,   11 /* Public */,
 
  // signals: parameters
     QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,    3,    4,    5,
+    QMetaType::Void, QMetaType::Bool,    7,
 
  // slots: parameters
-    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,    7,    3,    8,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,    9,    3,   10,
     QMetaType::Void,
 
        0        // eod
@@ -95,6 +99,9 @@ Q_CONSTINIT const QMetaObject CPSSocket::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        // method 'connectionChanged'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<bool, std::false_type>,
         // method 'connectToServer'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
@@ -113,8 +120,9 @@ void CPSSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         (void)_t;
         switch (_id) {
         case 0: _t->newUser((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 1: _t->connectToServer((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
-        case 2: _t->collectingNewData(); break;
+        case 1: _t->connectionChanged((*reinterpret_cast< std::add_pointer_t<bool>>(_a[1]))); break;
+        case 2: _t->connectToServer((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
+        case 3: _t->collectingNewData(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -123,6 +131,13 @@ void CPSSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
             using _t = void (CPSSocket::*)(const QString & , const QString & , const QString & );
             if (_t _q_method = &CPSSocket::newUser; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
                 *result = 0;
+                return;
+            }
+        }
+        {
+            using _t = void (CPSSocket::*)(bool );
+            if (_t _q_method = &CPSSocket::connectionChanged; *reinterpret_cast<_t *>(_a[1]) == _q_method) {
+                *result = 1;
                 return;
             }
         }
@@ -148,13 +163,13 @@ int CPSSocket::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 4)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }
@@ -164,5 +179,12 @@ void CPSSocket::newUser(const QString & _t1, const QString & _t2, const QString 
 {
     void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t2))), const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t3))) };
     QMetaObject::activate(this, &staticMetaObject, 0, _a);
+}
+
+// SIGNAL 1
+void CPSSocket::connectionChanged(bool _t1)
+{
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 1, _a);
 }
 QT_WARNING_POP

@@ -5,7 +5,7 @@
 
 CPSSocket::CPSSocket(QObject *parent) : QObject(parent) {
     socket = new QTcpSocket(this);
-    connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
+    //QObject::connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
 }
 
 void CPSSocket::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
@@ -26,9 +26,14 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
             QByteArray responseData = socket->readAll();
             QTextStream(stdout) << "Received response from server:" << responseData << Qt::endl;
 
-            if(responseData == "Access granted")
+            if(responseData == "1")
             {
-                collectingNewData();
+                emit connectionChanged(true);
+                QTextStream(stdout) << "kkkkkkkkkkkkkkkkkkkk";
+                //collectingNewData();
+                QObject::connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
+                QTextStream(stdout) << "pppppppppppppppppppppppppppp";
+
             }
             // Process the response as needed
         } else {
@@ -41,6 +46,7 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
         QTextStream(stdout) << "Failed to connect to server:" << socket->errorString() << Qt::endl;
     }
 }
+
 
 void CPSSocket::collectingNewData() {
 
