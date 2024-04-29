@@ -20,8 +20,8 @@ set(PROJECT_SOURCES
     main.cpp
     cpsmainwindow.cpp
     cpsmainwindow.h
-    #cpssocket.cpp   # Add your socket source files here
-    #cpssocket.h
+    cpssocket.cpp   # Add your socket source files here
+    cpssocket.h
 )
 
 # Set icon resource for Windows
