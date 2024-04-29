@@ -1,0 +1,14 @@
+# ninja log v5
+1	409	7360925690139285	server_autogen/timestamp	ab152796563d7707
+1	409	7360925690139285	server_autogen/mocs_compilation.cpp	ab152796563d7707
+1	409	7360925690139285	F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/timestamp	ab152796563d7707
+1	409	7360925690139285	F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/mocs_compilation.cpp	ab152796563d7707
+409	445	7360925690895163	CMakeFiles/server.dir/server_autogen/mocs_compilation.cpp.obj	65c77b9ba9cb69dc
+412	1882	7360925705198631	CMakeFiles/server.dir/main.cpp.obj	3b84ca51a66bdd00
+1884	1996	7360925706361777	server.exe	80e6717bf1748e3c
+9	387	7360929541336785	server_autogen/timestamp	ab152796563d7707
+9	387	7360929541336785	server_autogen/mocs_compilation.cpp	ab152796563d7707
+9	387	7360929541336785	F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/timestamp	ab152796563d7707
+9	387	7360929541336785	F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/mocs_compilation.cpp	ab152796563d7707
+390	1835	7360929555788454	CMakeFiles/server.dir/main.cpp.obj	3b84ca51a66bdd00
+1836	1946	7360929556880983	server.exe	80e6717bf1748e3c

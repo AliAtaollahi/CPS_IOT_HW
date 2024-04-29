@@ -7,6 +7,7 @@
 #include "cpsmainwindow.h"
 #include "cpshistorywindow.h"
 #include "cpswindowsapitools.h"
+#include "cpssocket.h"
 
 namespace CPS {
 
@@ -25,12 +26,14 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void showHistoryWindow();
+    void connectToServer();
 
 private: // methods
 
 private: // members
     MainWindow    *_window;
     HistoryWindow *_history;
+    CPSSocket *_socket; // Instance of the socket class
 
     //TODO:
     //YourSocketClass *_YourSocketClassInstance;
