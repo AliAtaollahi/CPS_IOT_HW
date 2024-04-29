@@ -42,8 +42,10 @@ This project develops a system to control the entry and exit of individuals in a
    - Use Qt Creator to develop the GUI.
    - Implement the WebSocket client in the GUI to receive updates from the web server.
 
-## Project Directory Structure and Contents
+## Flowchart
+<img src="CA1/Pics/Flowchart.png" alt="flowchart" width="50%">
 
+## Project Directory Structure and Contents
 ### Proteus Folder
 This folder holds simulation files for Proteus software, allowing us to simulate the hardware setup virtually. Here's a detailed description of the simulation setup:
 
