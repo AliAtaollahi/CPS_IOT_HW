@@ -1,0 +1,5 @@
+// Define the icon file
+IDI_ICON1               ICON    DISCARDABLE     "Ut.ico"
+
+// Associate the icon with the application executable
+1                       ICON    DISCARDABLE     "Ut.ico"

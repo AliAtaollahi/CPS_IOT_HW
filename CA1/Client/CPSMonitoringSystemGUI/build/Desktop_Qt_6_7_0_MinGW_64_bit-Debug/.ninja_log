@@ -1,0 +1,15 @@
+# ninja log v5
+19	2806	7360739173731565	MonitoritngSystem_autogen/timestamp	190904c0ac8590d7
+19	2806	7360739173731565	MonitoritngSystem_autogen/mocs_compilation.cpp	190904c0ac8590d7
+19	2806	7360739173731565	C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoritngSystem_autogen/timestamp	190904c0ac8590d7
+19	2806	7360739173731565	C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoritngSystem_autogen/mocs_compilation.cpp	190904c0ac8590d7
+2820	3071	7360739177527407	CMakeFiles/MonitoritngSystem.dir/icon.rc.obj	d548a36101101b33
+2977	7184	7360739218589573	CMakeFiles/MonitoritngSystem.dir/cpslabel.cpp.obj	ebdc1b5bc07c05b9
+2971	7234	7360739219089489	CMakeFiles/MonitoritngSystem.dir/cpsbutton.cpp.obj	d7fb49ec8ca34462
+2964	7485	7360739221617956	CMakeFiles/MonitoritngSystem.dir/cpstextfield.cpp.obj	82fbf596e6cb4f8d
+2816	7742	7360739224174683	CMakeFiles/MonitoritngSystem.dir/cpsmainwindow.cpp.obj	80935ea988999584
+2957	8143	7360739228169918	CMakeFiles/MonitoritngSystem.dir/cpshistorywindow.cpp.obj	d4a20c1224c39e99
+2811	10151	7360739248265126	CMakeFiles/MonitoritngSystem.dir/main.cpp.obj	9020e39405843ff2
+2985	10460	7360739251322243	CMakeFiles/MonitoritngSystem.dir/cpsapplication.cpp.obj	307a3b48b601e2de
+2807	10496	7360739251722461	CMakeFiles/MonitoritngSystem.dir/MonitoritngSystem_autogen/mocs_compilation.cpp.obj	d51e3e160f3caa65
+10497	11644	7360739263154810	MonitoritngSystem.exe	ba5dc2fefb7b7f74
