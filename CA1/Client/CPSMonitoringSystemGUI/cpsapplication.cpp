@@ -17,8 +17,7 @@ Application::Application(QObject *parent)
     QObject::connect(_window, &MainWindow::connectBtnClicked, this, &Application::connectToServer); // Connect button click to server connection
 
 
-    //QObject::connect(_socket, &CPSSocket::connected, _window, &MainWindow::changeRightPanelEnabled);
-    //QObject::connect(_socket, &CPSSocket::errorOccurred, _window, &MainWindow::changeRightPanelEnabled); // Assuming error means disconnection
+
     // TODO:
     // QObject::connect(&YourSocketClassInstance, &YourSocketClass::newUser, &window, &MainWindow::showUserDetails);
     // QObject::connect(&window, &MainWindow::connectBtnClicked, &YourSocketClassInstance, &YourSocketClass::connectToServer);
@@ -97,10 +96,10 @@ void Application::showHistoryWindow()
     _history->show(data);
 }
 
-void Application::connectToServer() {
+void Application::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
     // When the "اتصال به سرور" button is clicked, connect to server using the socket
     QTextStream(stdout) << "hello" << Qt::endl;
-    _socket->connectToServer();
+    _socket->connectToServer(serverAddress, username, password);
 }
 
 } // end of CPS

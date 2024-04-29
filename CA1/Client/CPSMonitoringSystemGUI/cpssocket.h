@@ -11,7 +11,7 @@ public:
     explicit CPSSocket(QObject *parent = nullptr);
 
 public slots:
-    void connectToServer();
+    void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
 
 private:
     QTcpSocket *socket;

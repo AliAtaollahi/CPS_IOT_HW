@@ -24,9 +24,12 @@ public:
 
 Q_SIGNALS:
 
+
 private Q_SLOTS:
     void showHistoryWindow();
-    void connectToServer();
+    void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
+
+   // void connectToServer();
 
 private: // methods
 

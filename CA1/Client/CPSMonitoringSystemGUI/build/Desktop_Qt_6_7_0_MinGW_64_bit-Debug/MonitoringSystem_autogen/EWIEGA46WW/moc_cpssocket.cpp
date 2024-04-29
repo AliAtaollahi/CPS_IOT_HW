@@ -37,7 +37,10 @@ struct qt_meta_stringdata_CLASSCPSSocketENDCLASS_t {};
 constexpr auto qt_meta_stringdata_CLASSCPSSocketENDCLASS = QtMocHelpers::stringData(
     "CPSSocket",
     "connectToServer",
-    ""
+    "",
+    "serverAddress",
+    "username",
+    "password"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -58,10 +61,10 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSCPSSocketENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   20,    2, 0x0a,    1 /* Public */,
+       1,    3,   20,    2, 0x0a,    1 /* Public */,
 
  // slots: parameters
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,    3,    4,    5,
 
        0        // eod
 };
@@ -76,7 +79,10 @@ Q_CONSTINIT const QMetaObject CPSSocket::staticMetaObject = { {
         // Q_OBJECT / Q_GADGET
         QtPrivate::TypeAndForceComplete<CPSSocket, std::true_type>,
         // method 'connectToServer'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>
     >,
     nullptr
 } };
@@ -87,11 +93,10 @@ void CPSSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, v
         auto *_t = static_cast<CPSSocket *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->connectToServer(); break;
+        case 0: _t->connectToServer((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         default: ;
         }
     }
-    (void)_a;
 }
 
 const QMetaObject *CPSSocket::metaObject() const

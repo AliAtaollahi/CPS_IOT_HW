@@ -39,7 +39,10 @@ constexpr auto qt_meta_stringdata_CLASSCPSSCOPEApplicationENDCLASS = QtMocHelper
     "CPS::Application",
     "showHistoryWindow",
     "",
-    "connectToServer"
+    "connectToServer",
+    "serverAddress",
+    "username",
+    "password"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -61,11 +64,11 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSCPSSCOPEApplicationENDCLASS[] = 
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
        1,    0,   26,    2, 0x08,    1 /* Private */,
-       3,    0,   27,    2, 0x08,    2 /* Private */,
+       3,    3,   27,    2, 0x08,    2 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::QString, QMetaType::QString, QMetaType::QString,    4,    5,    6,
 
        0        // eod
 };
@@ -82,7 +85,10 @@ Q_CONSTINIT const QMetaObject CPS::Application::staticMetaObject = { {
         // method 'showHistoryWindow'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'connectToServer'
-        QtPrivate::TypeAndForceComplete<void, std::false_type>
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>,
+        QtPrivate::TypeAndForceComplete<const QString &, std::false_type>
     >,
     nullptr
 } };
@@ -94,11 +100,10 @@ void CPS::Application::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int
         (void)_t;
         switch (_id) {
         case 0: _t->showHistoryWindow(); break;
-        case 1: _t->connectToServer(); break;
+        case 1: _t->connectToServer((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[3]))); break;
         default: ;
         }
     }
-    (void)_a;
 }
 
 const QMetaObject *CPS::Application::metaObject() const
