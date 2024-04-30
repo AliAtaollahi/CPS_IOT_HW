@@ -17,7 +17,7 @@ void SocketServer::incomingConnection(qintptr socketDescriptor) {
 
         QByteArray data = clientSocket->readAll();
         qDebug() << "Received:" << data;
-        processUserData(data, clientSocket);
+        processData(data, clientSocket);
 
     });
 
@@ -31,73 +31,79 @@ bool SocketServer::isValidRFID(const QString &rfid) {
     return hardcodedRFIDs.contains(rfid);
 }
 
-void SocketServer::processUserData(const QByteArray &data, QTcpSocket *clientSocket) {
+void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
     if(data == "historyRequest"){
-
-        qDebug() << "i am in historyRequest.";
-        // Create the JSON array for the data
-        QJsonArray dataArray;
-
-        // Create the first JSON object
-        QJsonObject obj1;
-        obj1["username"] = "user1";
-        obj1["date"] = "2024-04-30";
-        obj1["time"] = "10:00";
-
-        // Create the second JSON object
-        QJsonObject obj2;
-        obj2["username"] = "user2";
-        obj2["date"] = "2024-04-30";
-        obj2["time"] = "11:30";
-
-        // Add the JSON objects to the data array
-        dataArray.append(obj1);
-        dataArray.append(obj2);
-
-        // Create the main JSON object
-        QJsonObject mainObj;
-        mainObj["type"] = "history"; // Add the "type" field
-        mainObj["data"] = dataArray; // Add the "data" field with the array
-
-        // Convert the main JSON object to a JSON document
-        QJsonDocument jsonDocument(mainObj);
-
-        // Convert the JSON document to a QByteArray
-        QByteArray jsonData = jsonDocument.toJson();
-
+        QByteArray jsonData = retrieveHistoryData();
         qDebug() << "i am still in historyRequest.";
         clientSocket->write(jsonData);
         qDebug() << "i have sent message in historyRequest.";
     }
     else{
-        QList<QByteArray> parts = data.split(':');
-
-        if (parts.size() >= 2) {
-            QString username = QString::fromUtf8(parts[0]);
-            QString password = QString::fromUtf8(parts[1]);
-            bool isValid = isValidUser(username, password);
-            if (isValid) {
-
-                //this->clientSocketpointer = clientSocket;
-                clientSocket->write("1");
-                qDebug() << "Access granted for:" << username;
-            } else {
-                qDebug() << "Access denied for:" << username;
-                clientSocket->write("0");
-                clientSocket->close();
-            }
-            qDebug() << "Username:" << username << "Password:" << password;
-        } else {
-            qDebug() << "Invalid message format";
-        }
+        authenticateUser(data, clientSocket);
     }
+}
+
+void SocketServer::authenticateUser(const QByteArray &data, QTcpSocket *clientSocket){
+    QList<QByteArray> parts = data.split(':');
+
+    if (parts.size() >= 2) {
+        QString username = QString::fromUtf8(parts[0]);
+        QString password = QString::fromUtf8(parts[1]);
+        bool isValid = isValidUser(username, password);
+        if (isValid) {
+            //this->clientSocketpointer = clientSocket;
+            clientSocket->write("1");
+            qDebug() << "Access granted for:" << username;
+        } else {
+            qDebug() << "Access denied for:" << username;
+            clientSocket->write("0");
+            clientSocket->close();
+        }
+        qDebug() << "Username:" << username << "Password:" << password;
+    } else {
+        qDebug() << "Invalid message format";
+    }
+}
+
+QByteArray SocketServer::retrieveHistoryData(){
+    qDebug() << "i am in historyRequest.";
+    // Create the JSON array for the data
+    QJsonArray dataArray;
+
+    // Create the first JSON object
+    QJsonObject obj1;
+    obj1["username"] = "user1";
+    obj1["date"] = "2024-04-30";
+    obj1["time"] = "10:00";
+
+    // Create the second JSON object
+    QJsonObject obj2;
+    obj2["username"] = "user2";
+    obj2["date"] = "2024-04-30";
+    obj2["time"] = "11:30";
+
+    // Add the JSON objects to the data array
+    dataArray.append(obj1);
+    dataArray.append(obj2);
+
+    // Create the main JSON object
+    QJsonObject mainObj;
+    mainObj["type"] = "history"; // Add the "type" field
+    mainObj["data"] = dataArray; // Add the "data" field with the array
+
+    // Convert the main JSON object to a JSON document
+    QJsonDocument jsonDocument(mainObj);
+
+    // Convert the JSON document to a QByteArray
+    QByteArray jsonData = jsonDocument.toJson();
+    return jsonData;
 }
 
 bool SocketServer::isValidUser(const QString &username, const QString &password) {
     return (username == "test" && password == "1234");
 }
 
-void SocketServer::sendWebSocketMessage(const QString &rfid) {
+void SocketServer::sendNewUserDataToAdmin(const QString &rfid) {
     // Construct message with RFID and date/time
     // Get current date and time
     QDateTime currentDateTime = QDateTime::currentDateTime();
@@ -111,6 +117,7 @@ void SocketServer::sendWebSocketMessage(const QString &rfid) {
     QString timeString = currentTime.toString("HH:mm:ss");
 
     QJsonObject messageObj;
+    messageObj["type"] = "user";
     messageObj["username"] = rfid;
     messageObj["date"] = dateString;
     messageObj["time"] = timeString;

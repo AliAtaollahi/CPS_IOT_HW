@@ -17,15 +17,16 @@ public:
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
+    bool isValidRFID(const QString &rfid);
+    void processData(QByteArray &data, QTcpSocket *clientSocket);
+    bool isValidUser(const QString &username, const QString &password);
+    void sendNewUserDataToAdmin(const QString &rfid);
+    QByteArray retrieveHistoryData();
+    void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
 
 private:
     QStringList hardcodedRFIDs;
     QTcpSocket* clientSocketpointer; // Store pointer to client socket
-
-    bool isValidRFID(const QString &rfid);
-    void processUserData(const QByteArray &data, QTcpSocket *clientSocket);
-    bool isValidUser(const QString &username, const QString &password);
-    void sendWebSocketMessage(const QString &rfid);
 };
 
 #endif // SOCKETSERVER_H
