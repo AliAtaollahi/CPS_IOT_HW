@@ -162,8 +162,7 @@ void loop() {
 
       //boolean sequenceResult = checkSequence(inputString);
 
-      Serial.print("\nInput Length: ");
-      Serial.println(inputString.length());
+      Serial.println("  \n ");
       Serial.print("Sequence Check Result: ");
       Serial.println(sequenceResult ? "Correct" : "Incorrect");
       
