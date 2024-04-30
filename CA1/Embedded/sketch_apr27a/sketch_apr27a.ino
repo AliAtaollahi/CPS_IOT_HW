@@ -1,6 +1,7 @@
 #include <Servo.h>
 #include <EtherCard.h>
 
+#define TIMEOUT_TIME 200
 #define GREEN_LED 2
 #define RED_LED 3
 #define RX_PIN 0
@@ -20,12 +21,13 @@ static byte hisip[] = { 192,168,2,1 };
 // remote website name
 const char website[] PROGMEM = "192.168.2.1";
 
-byte Ethernet::buffer[700];   // a very small tcp/ip buffer is enough here
+byte Ethernet::buffer[900];   // a very small tcp/ip buffer is enough here
 
 
 String inputString = "";
 boolean doorOpen = false;
 unsigned long doorOpenTime = 0;
+Stash stash;
 
 static void my_result_cb(byte status, word off, word len)
 {
@@ -37,6 +39,76 @@ boolean checkSequence(String sequence) {
   String expectedSequence = "1111111111";
   return (sequence == expectedSequence);
 }
+
+
+bool sendHandshake() {
+  ether.packetLoop(ether.packetReceive());
+  byte stash_desc = stash.create();
+  stash.print("Handshake");
+  stash.save();
+
+  Stash::prepare(PSTR("POST http://$F/$F HTTP/1.1\r\n"
+                      "Host: $F\r\n"
+                      "Content-Length: $D\r\n"
+                      "Content-Type: text/plain\r\n"
+                      "\r\n"
+                      "$H"),
+                 website, PSTR("rfid"), website, stash.size(), stash_desc);
+
+  byte session = ether.tcpSend();
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < 5000) { // Timeout after 5 seconds
+    ether.packetLoop(ether.packetReceive());
+
+    // Flush the Ethernet buffer
+    while (ether.tcpReply(session) != 0) {
+      // Read and discard the data
+      const char* reply = ether.tcpReply(session);
+    }
+  }
+
+  return true;
+}
+
+bool checkRFID(String tag) {
+  ether.packetLoop(ether.packetReceive());
+  byte stash_desc = stash.create();
+  stash.print("rfid=");
+  stash.print(tag);
+  stash.save();
+
+  Stash::prepare(PSTR("POST http://$F/$F HTTP/1.1\r\n"
+                      "Host: $F\r\n"
+                      "Content-Length: $D\r\n"
+                      "Content-Type: text/plain\r\n"
+                      "\r\n"
+                      "$H"),
+                 website, PSTR("rfid"), website, stash.size(), stash_desc);
+
+  byte session = ether.tcpSend();
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < TIMEOUT_TIME) { // Timeout after 10 seconds
+    ether.packetLoop(ether.packetReceive());
+    
+    const char* reply = ether.tcpReply(session);
+    if (reply != 0) {
+
+      /*Serial.println(reply);
+      char status[4];
+      getStatus(status, reply);
+      Serial.println(status);*/
+
+      return true;
+    }
+
+  }
+
+  //Serial.println("Timeout: No response received from server");
+  return false; // no access
+}
+
 
 void setup() {
   pinMode(GREEN_LED, OUTPUT);
@@ -56,6 +128,8 @@ void setup() {
 
   ether.clientWaitingGw();
   Serial.println("Gateway found");
+  sendHandshake();
+  Serial.println("Handshake completed");
 }
 
 void loop() {
@@ -84,9 +158,9 @@ void loop() {
 
     // If the receivedString has reached 10 characters
     if (inputString.length() == 10) {
+        boolean sequenceResult = checkRFID(inputString);
 
-      ether.browseUrl(PSTR("/rfid?massage=hello"), "", website, my_result_cb);
-      boolean sequenceResult = checkSequence(inputString);
+      //boolean sequenceResult = checkSequence(inputString);
 
       Serial.print("\nInput Length: ");
       Serial.println(inputString.length());
