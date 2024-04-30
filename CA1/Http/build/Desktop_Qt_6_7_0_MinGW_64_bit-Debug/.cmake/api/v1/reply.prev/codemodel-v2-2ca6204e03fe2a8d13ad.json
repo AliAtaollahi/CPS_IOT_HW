@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f61bd739694a5dec1662.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Http",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Http::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Http-Debug-803aaaa2dce1bf949132.json",
+					"name" : "Http",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Http_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Http_autogen-Debug-586bb5abf696d20d0888.json",
+					"name" : "Http_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "Http_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Http_autogen_timestamp_deps-Debug-b546764f481149c42943.json",
+					"name" : "Http_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/8/CPS/CAs-HWs/Cyber-Physical-Systems-Projects/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug",
+		"source" : "D:/8/CPS/CAs-HWs/Cyber-Physical-Systems-Projects/CA1/Http"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}
