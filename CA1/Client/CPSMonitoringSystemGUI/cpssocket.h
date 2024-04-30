@@ -13,8 +13,7 @@ public:
 
 public Q_SLOTS:
     void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
-    void collectingNewData(); // Method to collect new data
-
+    void collectingNewData();
 
 private:
     QTcpSocket *socket;
@@ -24,8 +23,6 @@ Q_SIGNALS:
     void newUser(const QString &username, const QString &date, const QString &time);
     void connectionChanged(bool enabled);
     void newHistory(const QJsonObject &jsonObject);
-
-
 };
 
 #endif // CPSSOCKET_H
