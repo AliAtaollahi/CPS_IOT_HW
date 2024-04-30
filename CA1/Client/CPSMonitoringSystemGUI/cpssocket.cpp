@@ -52,8 +52,12 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
 
 
 void CPSSocket::collectingNewData() {
+
+    QTextStream(stdout) << "uuuuuuuuuuuuuuuuuuuuuuuuuuuu";
+
     QByteArray responseData = socket->readAll();
 
+    QTextStream(stdout) << responseData;
     // Parse the JSON data
     QJsonDocument jsonDocument = QJsonDocument::fromJson(responseData);
     if (!jsonDocument.isNull() && jsonDocument.isObject()) {
@@ -63,6 +67,7 @@ void CPSSocket::collectingNewData() {
         if (jsonObject.contains("type") && jsonObject["type"].toString() == "user") {
            ExtractNewUserData(jsonObject);
         } else if (jsonObject.contains("type") && jsonObject["type"].toString() == "history") {
+            QTextStream(stdout) << "helloooooooooooooooooooo";
            emit newHistory(jsonObject);
         } else {
             qDebug() << "Invalid type field in JSON data";

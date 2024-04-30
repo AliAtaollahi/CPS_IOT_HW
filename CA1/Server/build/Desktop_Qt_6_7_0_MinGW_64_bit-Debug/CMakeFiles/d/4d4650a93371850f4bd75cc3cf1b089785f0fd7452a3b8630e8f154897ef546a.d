@@ -2,6 +2,9 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/QCoreApplication \
   D:/qt/6.7.0/mingw_64/include/QtCore/QDateTime \
   D:/qt/6.7.0/mingw_64/include/QtCore/QDebug \
+  D:/qt/6.7.0/mingw_64/include/QtCore/QJsonArray \
+  D:/qt/6.7.0/mingw_64/include/QtCore/QJsonDocument \
+  D:/qt/6.7.0/mingw_64/include/QtCore/QJsonObject \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20memory.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20type_traits.h \
@@ -21,6 +24,8 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qbytearraylist.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayview.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcalendar.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qcborcommon.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qcborvalue.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qchar.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcompare.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qcompare_impl.h \
@@ -41,6 +46,7 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdeadlinetimer.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qdebug.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qelapsedtimer.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qendian.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qeventloop.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qexceptionhandling.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qflags.h \
@@ -57,6 +63,10 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qiodevicebase.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qiterable.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qjsonarray.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qjsondocument.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qjsonobject.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qjsonvalue.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlist.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlocale.h \
@@ -78,6 +88,7 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qpair.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qprocessordetection.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qrefcount.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qregularexpression.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qscopedpointer.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qscopeguard.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qset.h \
@@ -118,7 +129,9 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtCore/qtversionchecks.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qtypeinfo.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qtypes.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qurl.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qutf8stringview.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/quuid.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qvariant.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qvarlengtharray.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qversiontagging.h \

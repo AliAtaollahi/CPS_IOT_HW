@@ -5,6 +5,9 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QCoreApplication
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QDateTime
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QDebug
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QJsonArray
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QJsonDocument
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/QJsonObject
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/q20memory.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/q20type_traits.h
@@ -24,6 +27,8 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qbytearraylist.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qbytearrayview.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcalendar.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcborcommon.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcborvalue.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qchar.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcompare.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qcompare_impl.h
@@ -44,6 +49,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdeadlinetimer.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qdebug.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qelapsedtimer.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qendian.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qeventloop.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qexceptionhandling.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qflags.h
@@ -60,6 +66,10 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qiodevicebase.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qiterable.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qjsonarray.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qjsondocument.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qjsonobject.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qjsonvalue.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlist.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qlocale.h
@@ -81,6 +91,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qpair.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qprocessordetection.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qrefcount.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qregularexpression.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qscopedpointer.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qscopeguard.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qset.h
@@ -121,7 +132,9 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qtversionchecks.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qtypeinfo.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qtypes.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qurl.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qutf8stringview.h
+ mdp:D:/qt/6.7.0/mingw_64/include/QtCore/quuid.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qvariant.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qvarlengtharray.h
  mdp:D:/qt/6.7.0/mingw_64/include/QtCore/qversiontagging.h
