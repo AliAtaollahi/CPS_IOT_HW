@@ -113,12 +113,12 @@ ___
 ### Embedded Folder
 The embedded software for the IoT-based Entry and Exit Management System is designed to run on an Arduino board. It integrates several components including a servo motor for door control, RFID reader for identity verification, and an Ethernet module for network communication. The following sections describe the key parts of the Arduino sketch, highlighting how each contributes to the system's operations.
 
-### Key Libraries
+#### Key Libraries
 
 - **Servo.h**: Manages the servo motor used to open and close the door.
 - **EtherCard.h**: Facilitates Ethernet communications for interfacing with the cloud server.
 
-### Configuration
+#### Configuration
 
 ```cpp
 #define TIMEOUT_TIME 200
@@ -130,7 +130,7 @@ The embedded software for the IoT-based Entry and Exit Management System is desi
 ```
 Defines the pin configuration and timeout settings for the system, ensuring that components such as LEDs and servo motors are correctly managed.
 
-### Initialization
+#### Initialization
 
 ```cpp
 Servo doorServo;
@@ -156,7 +156,7 @@ Stash stash;
 ```
 Initializes the servo motor and sets up networking parameters including MAC address, IP addresses, and the remote server details.
 
-### Main Functions
+#### Main Functions:
 
 #### Setup Function
 ```cpp
@@ -276,7 +276,7 @@ Continuously reads RFID tags, checks them against server-side validation, and co
 
 This detailed description maps out how the system handles each step of RFID data processing and the corresponding access control logic, ensuring clarity in how security and access are managed within the system.
 
-### checkRFID Function
+#### checkRFID Function
 ```cpp
 bool checkRFID(String tag) {
   ether.packetLoop(ether.packetReceive());
@@ -360,21 +360,269 @@ bool sendHandshake() {
 
 The sendHandshake function in our code is designed to establish an initial communication session between the Arduino-based system and a server. This handshake is critical as it sets up a preliminary connection with the server, reducing the overhead for subsequent RFID tag transmissions by ensuring the communication channel is open and responsive. Here’s a breakdown focusing on the core components and their purposes:
 
-### 1. **Packet Handling and Data Preparation**
+ **1. Packet Handling and Data Preparation**
 - **Packet Processing**: Begins by processing any packets that have been received to keep the Ethernet interface active.
 - **Stash Setup**: Utilizes the `Stash` class to create a temporary storage (stash) for the handshake message. This message is simply the string "Handshake".
 - **HTTP Request Preparation**: Constructs an HTTP POST request using the stored "Handshake" message. The request is formatted with headers specifying the host, content length, and content type. 
 
-### 2. **Sending the Request and Monitoring Response**
+ **2. Sending the Request and Monitoring Response**
 - **Sending Request**: Initiates a TCP session using `ether.tcpSend()` to transmit the prepared HTTP request to the server.
 - **Response Handling**: Monitors for a server response over a fixed timeout period of 5 seconds. This loop ensures that the Arduino continues to process incoming packets during this wait period.
 
-### 3. **Cleanup and Return**
+ **3. Cleanup and Return**
 - **Buffer Flushing**: Continuously checks for a reply within the given timeout. If a reply is received, it reads and discards the data to clear the buffer.
 - **Function Exit**: The function returns `true` after the timeout period, regardless of whether a response was received or not. This implies that the handshake is considered complete after attempting to communicate, without verifying the success of the handshake explicitly.
 
 ---
+### Client Folder
+This folder contains the code for the Qt-based GUI monitoring system, which is used to display entry events.
+The initial source code was provided, and significant enhancements have been made to tailor it to our project's specific requirements and functionalities.
+
+**Modifications and Enhancements:**
+#### `cpsapplication.h`
+
+- **Signal and Slot Definitions**: Updated the header file to include new signals and slots that facilitate the communication between the GUI components and the backend processes.
+```cpp
+#ifndef CPSAPPLICATION_H
+#define CPSAPPLICATION_H
+
+#include <QObject>
+#include <QApplication>
+#include <QJsonDocument>
+#include <QJsonObject>
+
+#include "cpsmainwindow.h"
+#include "cpshistorywindow.h"
+#include "cpswindowsapitools.h"
+#include "cpssocket.h"
+
+namespace CPS {
+
+class Application : public QObject
+{
+    Q_OBJECT
+
+public:
+
+    explicit Application(QObject *parent = nullptr);
+    ~Application();
+
+    void show();
+
+Q_SIGNALS:
 
 
+private Q_SLOTS:
+    void showHistoryWindow(const QJsonObject &jsonObject);
+    void sendHistoryRequest();
+    void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
 
+private: // methods
+
+private: // members
+    MainWindow    *_window;
+    HistoryWindow *_history;
+    CPSSocket *_socket;
+};
+
+} // end of CPS
+
+#endif // CPSAPPLICATION_H
+```
+#### `cpsapplication.cpp`
+
+Several key modifications and new features were integrated into `cpsapplication.cpp` to enhance functionality and user experience:
+
+Certainly! The code lines you've provided involve the use of Qt's signal and slot mechanism, which is essential for handling asynchronous events in the application. Below is a detailed explanation of each connection made in `cpsapplication.cpp`:
+
+##### Detailed Explanation of Signal-Slot Connections:
+
+1. **Requesting History Data:**
+   ```cpp
+   QObject::connect(_window, &MainWindow::historyBtnClicked, this, &Application::sendHistoryRequest);
+   ```
+   This line connects the `historyBtnClicked` signal from the `MainWindow` class to the `sendHistoryRequest` slot of the `Application` class. When the history button is clicked in the GUI, this connection triggers a request to retrieve the history log from the server.
+
+2. **Server Connection Initialization:**
+   ```cpp
+   QObject::connect(_window, &MainWindow::connectBtnClicked, this, &Application::connectToServer);
+   ```
+   This line establishes a connection between the `connectBtnClicked` signal in the `MainWindow` and the `connectToServer` slot in the `Application`. It initiates the process to establish a network connection to the server when the connect button is clicked.
+
+3. **Displaying New User Details:**
+   ```cpp
+   QObject::connect(_socket, &CPSSocket::newUser, _window, &MainWindow::showUserDetails);
+   ```
+   Here, the `newUser` signal from the `CPSSocket` class is connected to the `showUserDetails` slot in the `MainWindow`. This setup is used for displaying the details of a new user (e.g., RFID tag recognized, entry granted/denied) in the GUI in real time as these events occur.
+
+4. **Handling New History Data:**
+   ```cpp
+   QObject::connect(_socket, &CPSSocket::newHistory, this, &Application::showHistoryWindow);
+   ```
+   This connection links the `newHistory` signal emitted by the `CPSSocket` class to the `showHistoryWindow` slot in the `Application`. It is triggered when new history data is received from the server, prompting the application to display this data in the history window.
+
+5. **Changing GUI Elements Based on Connection Status:**
+   ```cpp
+   QObject::connect(_socket, &CPSSocket::connectionChanged, _window, &MainWindow::changeRightPanelEnabled);
+   ```
+   This line connects the `connectionChanged` signal from the `CPSSocket` class to the `changeRightPanelEnabled` slot in the `MainWindow`. It enables or disables GUI elements based on the current network connection status (e.g., disabling the connect button to prevent duplicate connections).
+
+These connections are fundamental for the interactivity and responsiveness of your client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable your system to handle real-time data efficiently, ensuring that the GUI reflects the most current system status and logs.
+
+##### History Window Display Logic:  
+Developed a method to process and display the history data received from the server. The method parses the JSON data, extracting necessary details and passing them to the history window for display.
+
+```cpp
+void Application::showHistoryWindow(const QJsonObject &jsonObject)
+{
+    setWindowsThemeToDark<HistoryWindow>(*_history);
+
+    QJsonArray historyArray = jsonObject["data"].toArray();
+
+    QVariantList list;
+
+    for (const QJsonValue &value : historyArray) {
+        QJsonObject historyObject = value.toObject();
+        QJsonObject obj;
+        obj["username"] = historyObject["username"].toString();
+        obj["date"] = historyObject["date"].toString();
+        obj["time"] = historyObject["time"].toString();
+        list.append(obj);
+    }
+
+    QJsonArray data = QJsonArray::fromVariantList(list);
+
+    _history->show(data);
+}
+```
+### Client Socket Implementation
+This section details the implementation of the `CPSSocket` class, which handles all TCP/IP communications between the client-side application and the server. This class is pivotal for sending and receiving data over the network, authenticating users, and retrieving real-time updates about entry events and history.
+
+#### `cpssocket.h`
+
+```cpp
+#ifndef CPSSOCKET_H
+#define CPSSOCKET_H
+
+#include <QObject>
+#include <QTcpSocket>
+
+class CPSSocket : public QObject {
+    Q_OBJECT
+public:
+    explicit CPSSocket(QObject *parent = nullptr);
+    QTcpSocket* getSocket() const;
+
+public Q_SLOTS:
+    void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
+    void collectingNewData();
+
+private:
+    QTcpSocket *socket;
+    void ExtractNewUserData(const QJsonObject &jsonObject);
+
+Q_SIGNALS:
+    void newUser(const QString &username, const QString &date, const QString &time);
+    void connectionChanged(bool enabled);
+    void newHistory(const QJsonObject &jsonObject);
+};
+
+#endif // CPSSOCKET_H
+```
+- **Class CPSSocket**: Inherits from `QObject` and manages TCP socket communications.
+- **Constructor**: Initializes a new TCP socket.
+- **getSocket()**: Returns the active TCP socket.
+- **Slots**:
+  - **connectToServer()**: Connects to the server using the provided credentials.
+  - **collectingNewData()**: Handles incoming data from the server.
+- **Signals**:
+  - **newUser**: Emitted when new user data is received.
+  - **connectionChanged**: Emitted to update UI components based on connection status.
+  - **newHistory**: Emitted when new history data is received from the server.
+
+#### `cpssocket.cpp` 
+**1. Constructor**
+Initializes the `CPSSocket` object and creates a new `QTcpSocket`.
+```cpp
+CPSSocket::CPSSocket(QObject *parent) : QObject(parent) {
+    socket = new QTcpSocket(this);
+}
+```
+
+**2. Get Socket Method**  
+Provides external access to the internal TCP socket. Which Allows other parts of the application to use the socket for various networking tasks if needed.  
+
+```cpp
+QTcpSocket* CPSSocket::getSocket() const {
+    return socket;
+}
+```
+**3. Connect to Server**  
+Establishes a connection to the server and sends authentication data.
+```cpp
+void CPSSocket::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
+    socket->connectToHost(serverAddress, 5050);
+    if (socket->waitForConnected()) {
+        QString message = username + ":" + password;
+        QTextStream(stdout) << "Connected to server. Sending message: " << message << Qt::endl;
+        socket->write(message.toUtf8());
+        if (socket->waitForReadyRead()) {
+            QByteArray responseData = socket->readAll();
+            QTextStream(stdout) << "Received response from server:" << responseData << Qt::endl;
+            if(responseData == "1") {
+                emit connectionChanged(false);
+                QObject::connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
+            }
+        } else {
+            QTextStream(stdout) << "Timeout while waiting for server response" << Qt::endl;
+        }
+    } else {
+        QTextStream(stdout) << "Failed to connect to server:" << socket->errorString() << Qt::endl;
+    }
+}
+```
+  - **Connection Attempt**: Attempts to connect to the specified server address on port 5050.
+  - **Authentication**: Sends a combined string of username and password.
+  - **Response Handling**: Waits for a response from the server to confirm connection and authentication success.
+  - **Signal Emission**: If authenticated (`responseData` equals "1"), disables further connection attempts and sets up to receive new data.
+  - **Error Handling**: Outputs errors if connection fails or times out.
+
+**4. Collecting New Data**
+Handles new data received from the server.
+```cpp
+void CPSSocket::collectingNewData() {
+    QByteArray responseData = socket->readAll();
+    QJsonDocument jsonDocument = QJsonDocument::fromJson(responseData);
+    if (!jsonDocument.isNull() && jsonDocument.isObject()) {
+        QJsonObject jsonObject = jsonDocument.object();
+        if (jsonObject.contains("type") && jsonObject["type"].toString() == "user") {
+            ExtractNewUserData(jsonObject);
+        } else if (jsonObject.contains("type") && jsonObject["type"].toString() == "history") {
+            emit newHistory(jsonObject);
+        } else {
+            QTextStream(stdout) << "Invalid type field in JSON data" << Qt::endl;
+        }
+    } else {
+        QTextStream(stdout) << "Failed to parse JSON data" << Qt::endl;
+    }
+}
+```
+  - **Data Reception**: Reads all available data from the socket.
+  - **JSON Parsing**: Converts the byte array to a `QJsonDocument` and checks for validity.
+  - **Data Handling**: Depending on the "type" field in the JSON object, it either processes new user data or emits history data.
+  - **Error Handling**: Logs an error if the JSON data is invalid or cannot be parsed.
+
+**5. Extract New User Data**
+Extracts user details from the received JSON object and emits them.
+```cpp
+void CPSSocket::ExtractNewUserData(const QJsonObject &jsonObject) {
+    QString username = jsonObject["username"].toString();
+    QString date = jsonObject["date"].toString();
+    QString time = jsonObject["time"].toString();
+    emit newUser(username, date, time);
+}
+```
+This method retrieves the username, date, and time from the JSON object and emits the `newUser` signal with these details.
+
+---
 
