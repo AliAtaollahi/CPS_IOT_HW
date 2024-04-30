@@ -1,7 +1,7 @@
 #include <Servo.h>
 #include <EtherCard.h>
 
-#define TIMEOUT_TIME 200
+#define TIMEOUT_TIME 1000
 #define GREEN_LED 2
 #define RED_LED 3
 #define RX_PIN 0
@@ -40,6 +40,11 @@ boolean checkSequence(String sequence) {
   return (sequence == expectedSequence);
 }
 
+
+void getStatus(char* reply, char* status) { 
+  memcpy(status, &reply[13], 2);
+  status[2] = '\0';
+}
 
 bool sendHandshake() {
   ether.packetLoop(ether.packetReceive());
@@ -89,23 +94,24 @@ bool checkRFID(String tag) {
   byte session = ether.tcpSend();
 
   unsigned long startTime = millis();
-  while (millis() - startTime < TIMEOUT_TIME) { // Timeout after 10 seconds
+  while (millis() - startTime < TIMEOUT_TIME) {
     ether.packetLoop(ether.packetReceive());
     
     const char* reply = ether.tcpReply(session);
     if (reply != 0) {
 
+      
+      char status[3];
+      getStatus(reply, status);
       /*Serial.println(reply);
-      char status[4];
-      getStatus(status, reply);
       Serial.println(status);*/
 
-      return true;
+      return strcmp(status, "OK") == 0 ? true : false;;
     }
+    delay(200);
 
   }
 
-  //Serial.println("Timeout: No response received from server");
   return false; // no access
 }
 
