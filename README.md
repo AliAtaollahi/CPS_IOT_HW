@@ -65,14 +65,16 @@ The flowchart provides a visual guide to the sequence of operations when an indi
 
 8. **End**: The flow concludes once the door is securely closed or the denied access protocol is completed.
 
+
 ## Project Directory Structure and Contents
+
 ### Proteus Folder
 This folder holds simulation files for Proteus software, allowing us to simulate the hardware setup virtually. Here's a detailed description of the simulation setup:
 
-1. **Simulation Environment**:
-   - The Proteus project file, **CPS CA1.pdsprj**, provides the simulation environment where we can visualize and test the behavior of the IoT-based entry and exit management system.
+#### Simulation Environment
+   - The Proteus project file, `CPS CA1.pdsprj`, provides the simulation environment where we can visualize and test the behavior of the IoT-based entry and exit management system.
 
-2. **Components**:
+#### Components:
    - **Terminal for Entering RFID Tag**: This component simulates the RFID tag reader terminal where individuals can tap their RFID cards for authentication. In the simulation, we can input RFID tag data to emulate different user interactions.
    
    - **Arduino Board**: The Arduino microcontroller is simulated to execute the control logic for the entry and exit management system. It interfaces with the RFID reader, servo motor, LEDs, and Ethernet module to perform authentication and control door access.
@@ -83,8 +85,36 @@ This folder holds simulation files for Proteus software, allowing us to simulate
    
    - **LEDs for Status Indication**: LED components are included in the simulation to visually represent the status of access control operations. Green LEDs indicate access granted, while red LEDs indicate access denied.
 
+#### Screenshots (imulation in Proteus)
+1. "Starting and Waiting for Handshake"
+![Screenshot 1 - Starting and Waiting for Handshake](CA1/Pics/screenshot(SimulationInProteus)/1.jpg)
+*Description: This screenshot captures the initial state of the system where the Arduino board is powered on and waiting to establish a connection with the cloud server. The system is in standby mode, indicated by the LEDs showing no activity.*
+
+2. "Handshake is Done"
+![Screenshot 2 - Handshake is Done](CA1/Pics/screenshot(SimulationInProteus)/2.jpg)
+*Description: This screenshot shows the system after successfully establishing a connection with the cloud server. The monitor shows that the handshake process is complete, and the system is ready to receive RFID authentication requests.*
+
+3. "Input a Correct RFID -> Open Door and Green LED"
+![Screenshot 3 - Input a Correct RFID](CA1/Pics/screenshot(SimulationInProteus)/3.jpg)
+*Description: In this screenshot, a correct RFID tag is presented to the system for authentication. The Arduino board processes the RFID data, communicates with the cloud server for authentication, and receives a positive response. As a result, the servo motor opens the door, and the green LED lights up, indicating access granted.*
+
+4. "Input an Incorrect RFID -> Close Door and Red LED"
+![Screenshot 4 - Input an Incorrect RFID](CA1/Pics/screenshot(SimulationInProteus)/4.jpg)
+*Description: This screenshot depicts the scenario where an incorrect RFID tag is presented for authentication. The Arduino board sends the RFID data to the cloud server, but authentication fails. Consequently, the servo motor closes the door, and the red LED lights up, signaling access denied.*
+
+5. "Sequential RFID Authentication - Open Door, Then Close for Second Person"
+![GIF - Sequential RFID Authentication](CA1/Pics/screenshot(SimulationInProteus)/5.gif)
+
+*Description: This GIF demonstrates a sequential scenario where a correct RFID tag is initially presented, granting access and opening the door. Subsequently, an incorrect RFID tag is presented, resulting in access denial and the door closing. Delays are observable due to processing time required for 1. Arduino to process the RFID data and control the servo motor, and 2. HTTP request and response between the Arduino and the cloud server for authentication.*
+
 
 This comprehensive simulation environment allows us to test and validate the functionality of the IoT-based entry and exit management system before deploying it in a real-world environment. It enables thorough testing of various scenarios and interactions to ensure the system operates reliably and efficiently.
+___
+### Embedded Folder
+The Embedded folder contains code and configurations for the Arduino board and peripherals.
+
+___
+
 
 
 
