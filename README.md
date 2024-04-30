@@ -473,7 +473,7 @@ Several key modifications and new features were integrated into `cpsapplication.
    ```
    This line connects the `connectionChanged` signal from the `CPSSocket` class to the `changeRightPanelEnabled` slot in the `MainWindow`. It enables or disables GUI elements based on the current network connection status (e.g., disabling the connect button to prevent duplicate connections).
 
-These connections are fundamental for the interactivity and responsiveness of your client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable your system to handle data efficiently, ensuring that the GUI reflects the most current system status and logs.
+These connections are fundamental for the interactivity and responsiveness of our client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable our system to handle data efficiently, ensuring that the GUI reflects the most current system status and logs.
 
 ##### History Window Display Logic:  
 Developed a method to process and display the history data received from the server. The method parses the JSON data, extracting necessary details and passing them to the history window for display.
@@ -764,7 +764,7 @@ Response Response::fromJson(const QJsonObject &json) {
 
 
 #### `customizedhttpserver.cpp` & `customizedhttpserver.h`
-These files together define and implement a custom HTTP server tailored for your IoT system. The header file declares the server class and necessary methods, while the implementation file details how the server handles HTTP requests and responses.
+These files together define and implement a custom HTTP server tailored for our IoT system. The header file declares the server class and necessary methods, while the implementation file details how the server handles HTTP requests and responses.
 
 **`.h` file:**
 ```cpp
@@ -937,7 +937,7 @@ const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
 }
 ```
 - **`readEmployeesFromJson`**: Parses employee data from a JSON file, creating employee records for each valid entry. This method ensures the database is populated with current and accurate information from the specified file.
-```
+```cpp
 void EmployeesDatabase::readEmployeesFromJson(const QString &path)
 {
     QFile file(path);
