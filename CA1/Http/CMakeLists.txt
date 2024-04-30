@@ -19,6 +19,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Network)
 add_executable(Http
   main.cpp
   customizedhttpserver.h customizedhttpserver.cpp
+  request.h request.cpp
+  response.h response.cpp
+  employee.h employee.cpp
+  employeesdatabase.h employeesdatabase.cpp
 )
 
 target_link_libraries(Http Qt${QT_VERSION_MAJOR}::Core Qt6::Network Qt6::HttpServer)

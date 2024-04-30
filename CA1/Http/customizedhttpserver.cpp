@@ -1,38 +1,61 @@
+// customizedhttpserver.cpp
 #include "customizedhttpserver.h"
+#include "request.h"
 
-CustomizedHttpServer::CustomizedHttpServer(QObject *parent)
-    : QObject{parent}
+CustomizedHttpServer::CustomizedHttpServer(int port, const QString &initialDataPath, QObject *parent) :
+    QObject(parent), employeesDatabase_(EmployeesDatabase(initialDataPath)), httpServer_(new QHttpServer())
 {
-    http_server = new QHttpServer{this};
-    http_server->route("/", [this] (const QHttpServerRequest &req) {
-        return this->handleRequest(req);
+    httpServer_->route("/rfid",QHttpServerRequest::Method::Post, [this](const QHttpServerRequest& request) {
+        return this->handleRequest(request);
     });
-    if (!http_server->listen(QHostAddress::Any, 80)) {
-        qCritical("Failed to listen on port 80");
-    }
+
+    startServer(port);
 }
 
-const QByteArray validTag = "0123456789";
-
-QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest &request)
+bool CustomizedHttpServer::startServer(int port)
 {
-    qDebug() << "salam";
-    if (request.method() != QHttpServerRequest::Method::Post)
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::MethodNotAllowed);
+    return httpServer_->listen(QHostAddress::Any, port);
+}
 
-    QJsonParseError error;
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(request.body(), &error);
-    if (error.error != QJsonParseError::NoError)
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
+QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest& request)
+{
+    // Read the JSON data from the request
+    QByteArray requestData = request.body();
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(requestData);
+    Request receivedRequest = Request::fromJson(jsonDoc.object());
+    QString type = receivedRequest.getType();
+    QVariant data = receivedRequest.getData();
+    if (type == "RFID") {
+        QJsonObject jsonData = data.toJsonObject();
+        QString rfid = jsonData["rfid"].toString();
 
-    QJsonObject jsonObj = jsonDoc.object();
-    if (!jsonObj.contains("valid_tag"))
-        return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
+        bool permitted = employeesDatabase_.handleRfidReceived(rfid);
+        QDateTime currentTime = QDateTime::currentDateTime();
+        emit resultRfidCheck(permitted, currentTime, rfid);
 
-    QByteArray tag = jsonObj.value("valid_tag").toString().toUtf8();
-    qDebug() << "salam";
-    if (tag == validTag)
-        return QHttpServerResponse("1", QHttpServerResponder::StatusCode::Ok);
-    else
-        return QHttpServerResponse("0", QHttpServerResponder::StatusCode::Unauthorized);
+        QJsonObject resultJsonObject;
+        QHttpServerResponse::StatusCode statusCode;
+        if (permitted) {
+            resultJsonObject = QJsonObject({
+                {"status", "Succeed"},
+                {"message", "RFID accepted"},
+                {"data", QJsonValue::Null}
+            });
+            statusCode = QHttpServerResponse::StatusCode::Ok;
+        }
+        
+        else {
+            resultJsonObject = QJsonObject({
+                {"status", "Failed"},
+                {"message", "RFID is not accepted"},
+                {"data", QJsonValue::Null}
+            });
+            statusCode = QHttpServerResponse::StatusCode::Unauthorized;
+        }
+
+        QJsonDocument resultJsonDoc(resultJsonObject);
+        QByteArray resultJsonByte = resultJsonDoc.toJson();
+
+        return QHttpServerResponse(resultJsonByte, statusCode);
+    }
 }
