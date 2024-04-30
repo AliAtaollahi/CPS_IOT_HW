@@ -1,0 +1,8 @@
+# ninja log v5
+26	1649	7361132482489236	server_autogen/timestamp	70e0fc307a6f8833
+26	1649	7361132482489236	server_autogen/mocs_compilation.cpp	70e0fc307a6f8833
+26	1649	7361132482489236	C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/timestamp	70e0fc307a6f8833
+26	1649	7361132482489236	C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/mocs_compilation.cpp	70e0fc307a6f8833
+1650	1736	7361132484575128	CMakeFiles/server.dir/server_autogen/mocs_compilation.cpp.obj	a111a784271db04c
+1657	5645	7361132523614418	CMakeFiles/server.dir/main.cpp.obj	10e9641a09aa2197
+5653	6128	7361132528405179	server.exe	9e13dca23bd82a10

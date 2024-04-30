@@ -1,15 +1,22 @@
 #include "cpsapplication.h"
 
+#include <QTextStream>
+
 namespace CPS {
 
 Application::Application(QObject *parent)
     : QObject{parent},
     _window(new MainWindow),
-    _history(new HistoryWindow)
+    _history(new HistoryWindow),
+    _socket(new CPSSocket) // Instantiate the socket here
 {
     setWindowsThemeToDark<MainWindow>(*_window);
 
     QObject::connect(_window, &MainWindow::historyuBtnClicked, this, &Application::showHistoryWindow);
+
+    QObject::connect(_window, &MainWindow::connectBtnClicked, this, &Application::connectToServer); // Connect button click to server connection
+
+
 
     // TODO:
     // QObject::connect(&YourSocketClassInstance, &YourSocketClass::newUser, &window, &MainWindow::showUserDetails);
@@ -34,6 +41,7 @@ void Application::show()
 
 void Application::showHistoryWindow()
 {
+    QTextStream(stdout) << "hello" << Qt::endl;
     setWindowsThemeToDark<HistoryWindow>(*_history);
 
     // TODO:
@@ -86,6 +94,12 @@ void Application::showHistoryWindow()
     QJsonArray data = QJsonArray::fromVariantList(list);
 
     _history->show(data);
+}
+
+void Application::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
+    // When the "اتصال به سرور" button is clicked, connect to server using the socket
+    QTextStream(stdout) << "hello" << Qt::endl;
+    _socket->connectToServer(serverAddress, username, password);
 }
 
 } // end of CPS
