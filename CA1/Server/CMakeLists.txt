@@ -14,6 +14,8 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Network)
 
 add_executable(server
   main.cpp
+  socketserver.h
+  socketserver.cpp
 )
 target_link_libraries(server PRIVATE
     Qt${QT_VERSION_MAJOR}::Core

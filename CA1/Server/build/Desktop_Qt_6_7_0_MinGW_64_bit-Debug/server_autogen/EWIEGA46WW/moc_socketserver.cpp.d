@@ -1,4 +1,5 @@
-server_autogen/timestamp: \
+F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/EWIEGA46WW/moc_socketserver.cpp: F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/socketserver.h \
+  F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/moc_predefs.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/QDateTime \
   D:/qt/6.7.0/mingw_64/include/QtCore/QDebug \
   D:/qt/6.7.0/mingw_64/include/QtCore/QJsonArray \
@@ -138,118 +139,6 @@ server_autogen/timestamp: \
   D:/qt/6.7.0/mingw_64/include/QtNetwork/qtnetwork-config.h \
   D:/qt/6.7.0/mingw_64/include/QtNetwork/qtnetworkexports.h \
   D:/qt/6.7.0/mingw_64/include/QtNetwork/qtnetworkglobal.h \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/FindWrapAtomic.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6Config.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6ConfigExtras.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6ConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6ConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6Dependencies.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6Targets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/Qt6VersionlessTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtFeature.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtFeatureCommon.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicAppleHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicCMakeHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicCMakeVersionHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicExternalProjectHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicFinalizerHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicFindPackageHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicPluginHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicTargetHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicTestHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicToolHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6/QtPublicWalkLibsHelpers.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfigExtras.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreVersionlessTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Core/QtInstallPaths.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsDependencies.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6CoreTools/Qt6CoreToolsVersionlessTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointMinGW32Target.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateVersionlessTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkDependencies.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkPlugins.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkVersionlessTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QNLMNIPluginAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QNLMNIPluginConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QNLMNIPluginTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QNLMNIPluginTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QSchannelBackendPluginAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QSchannelBackendPluginConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QSchannelBackendPluginTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QSchannelBackendPluginTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendCertOnlyPluginAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendCertOnlyPluginConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendCertOnlyPluginTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendCertOnlyPluginTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginTargets-relwithdebinfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6Network/Qt6QTlsBackendOpenSSLPluginTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateAdditionalTargetInfo.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfig.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersion.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateConfigVersionImpl.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateTargets.cmake \
-  D:/qt/6.7.0/mingw_64/lib/cmake/Qt6ZlibPrivate/Qt6ZlibPrivateVersionlessTargets.cmake \
-  D:/qt/Tools/CMake_64/bin/cmake.exe \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeCXXInformation.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeCommonLanguageInclude.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeFindDependencyMacro.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeGenericSystem.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeInitializeConfigs.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeLanguageInformation.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeRCInformation.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeSystemSpecificInformation.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CMakeSystemSpecificInitialize.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CheckCXXCompilerFlag.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CheckCXXSourceCompiles.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CheckIncludeFileCXX.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/CheckLibraryExists.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Compiler/CMakeCommonCompilerMacros.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Compiler/GNU-CXX.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Compiler/GNU.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/FindPackageMessage.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/FindThreads.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/GNUInstallDirs.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Internal/CheckCompilerFlag.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Internal/CheckFlagCommonConfig.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Internal/CheckSourceCompiles.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX-ABI.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows-GNU-CXX.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows-GNU.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows-Initialize.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows-windres.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/Windows.cmake \
-  D:/qt/Tools/CMake_64/share/cmake-3.27/Modules/Platform/WindowsPaths.cmake \
   D:/qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed/limits.h \
   D:/qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include-fixed/syslimits.h \
   D:/qt/Tools/mingw1120_64/lib/gcc/x86_64-w64-mingw32/11.2.0/include/c++/algorithm \
@@ -448,13 +337,4 @@ server_autogen/timestamp: \
   D:/qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/sys/types.h \
   D:/qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/time.h \
   D:/qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
-  D:/qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
-  F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/CMakeLists.txt \
-  .qtc/package-manager/auto-setup.cmake \
-  CMakeFiles/3.27.7/CMakeCXXCompiler.cmake \
-  CMakeFiles/3.27.7/CMakeRCCompiler.cmake \
-  CMakeFiles/3.27.7/CMakeSystem.cmake \
-  server_autogen/moc_predefs.h \
-  F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/main.cpp \
-  F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/socketserver.cpp \
-  F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/socketserver.h
+  D:/qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
