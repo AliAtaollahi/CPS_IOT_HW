@@ -111,9 +111,175 @@ This folder holds simulation files for Proteus software, allowing us to simulate
 This comprehensive simulation environment allows us to test and validate the functionality of the IoT-based entry and exit management system before deploying it in a real-world environment. It enables thorough testing of various scenarios and interactions to ensure the system operates reliably and efficiently.
 ___
 ### Embedded Folder
-The Embedded folder contains code and configurations for the Arduino board and peripherals.
+The embedded software for the IoT-based Entry and Exit Management System is designed to run on an Arduino board. It integrates several components including a servo motor for door control, RFID reader for identity verification, and an Ethernet module for network communication. The following sections describe the key parts of the Arduino sketch, highlighting how each contributes to the system's operations.
 
-___
+### Key Libraries
+
+- **Servo.h**: Manages the servo motor used to open and close the door.
+- **EtherCard.h**: Facilitates Ethernet communications for interfacing with the cloud server.
+
+### Configuration
+
+```cpp
+#define TIMEOUT_TIME 200
+#define GREEN_LED 2
+#define RED_LED 3
+#define RX_PIN 0
+#define TX_PIN 1
+#define SERVO_PIN 4
+```
+Defines the pin configuration and timeout settings for the system, ensuring that components such as LEDs and servo motors are correctly managed.
+
+### Initialization
+
+```cpp
+Servo doorServo;
+
+
+static byte mymac[] = { 0x75,0x69,0x69,0x2D,0x30,0x31 };
+// ethernet interface ip address
+static byte myip[] = { 192,168,2,2 };
+// gateway ip address
+static byte gwip[] = { 192,168,2,1 };
+// remote website ip address and port
+static byte hisip[] = { 192,168,2,1 };
+// remote website name
+const char website[] PROGMEM = "192.168.2.1";
+
+byte Ethernet::buffer[900];   // a very small tcp/ip buffer is enough here
+
+
+String inputString = "";
+boolean doorOpen = false;
+unsigned long doorOpenTime = 0;
+Stash stash;
+```
+Initializes the servo motor and sets up networking parameters including MAC address, IP addresses, and the remote server details.
+
+### Main Functions
+
+#### Setup Function
+```cpp
+void setup() {
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(RX_PIN, INPUT);
+  pinMode(TX_PIN, OUTPUT);
+  doorServo.attach(SERVO_PIN);
+  doorServo.write(0);
+  Serial.begin(9600);
+  
+  ether.begin(sizeof Ethernet::buffer, mymac, SS);
+
+  ether.staticSetup(myip, gwip);
+
+  ether.copyIp(ether.hisip, hisip);
+  ether.printIp("Server: ", ether.hisip);
+
+  ether.clientWaitingGw();
+  Serial.println("Gateway found");
+  sendHandshake();
+  Serial.println("Handshake completed");
+}
+```
+Configures the GPIO pins and attaches the servo to its designated pin. Network initialization and diagnostic outputs are also set here.
+Here’s a brief and focused explanation for each subject within our `setup()` function:  
+
+**1. Selecting Pins** 
+Configures GPIO pins for the LEDs and RX/TX pins, setting the directionality (input or output) for each.  
+
+**2. Closing Door**   
+Attaches the servo motor to its control pin and initializes it to a closed position, ensuring the door starts closed upon system reset.
+
+**3. Initializing Serial and Ethernet Port**    
+Initializes serial communication at 9600 baud rate for debugging and configures the Ethernet module with static IP settings.  
+
+**4. Performing Handshake**   
+Establishes a network route to the server, prints server IP for verification, waits for gateway availability, then sends a handshake to the server confirming network connectivity.
+
+#### Main Loop
+```cpp
+void loop() {
+  ether.packetLoop(ether.packetReceive());
+
+  
+  String receivedData = "";
+  while (Serial.available()) {
+    receivedData += Serial.readString();
+  }
+  
+  // If the receivedData has data
+  if (receivedData.length() > 0) {
+    inputString += receivedData;
+  }
+  
+  if (doorOpen) {
+    // Check if 30 seconds have elapsed since the door was opened
+    if (millis() - doorOpenTime >= 5000) {
+      doorOpen = false;
+      doorServo.write(0);
+      digitalWrite(GREEN_LED, LOW);
+      inputString = "";
+    }
+  }
+
+    // If the receivedString has reached 10 characters
+    if (inputString.length() == 10) {
+        boolean sequenceResult = checkRFID(inputString);
+
+      //boolean sequenceResult = checkSequence(inputString);
+
+      Serial.println("  \n ");
+      Serial.print("Sequence Check Result: ");
+      Serial.println(sequenceResult ? "Correct" : "Incorrect");
+      
+      if (sequenceResult) {
+        digitalWrite(GREEN_LED, HIGH);
+        digitalWrite(RED_LED, LOW);
+        doorServo.write(90);
+        doorOpen = true;
+        doorOpenTime = millis(); // Record the time when the door was opened
+      } else {
+        // If the sequence is incorrect, close the door
+        digitalWrite(GREEN_LED, LOW);
+        digitalWrite(RED_LED, HIGH);
+        doorServo.write(0);
+		    //const char jsonPayload[] PROGMEM = "{\"message\":\"hello\"}";
+		    
+        delay(500);
+        digitalWrite(RED_LED, LOW);
+        doorOpen = false;
+      }
+      inputString = "";
+    }
+}
+```
+Continuously reads RFID tags, checks them against server-side validation, and controls door access. Updates LED status based on authentication results. Here's a breakdown of the specific parts of the Arduino `loop()` function provided, detailing how it handles the RFID data received from the terminal, checks its validity, and manages access control logic based on the RFID check result:
+
+**1. Receiving RFID from Terminal**
+- **Network Data Handling**: Maintains the Ethernet connection and processes any packets that have been received.
+- **Serial Data Collection**: Gathers all available data from the serial buffer, appending it to a string. This is presumed to be RFID data from a terminal.
+- **Data Aggregation**: Adds newly received data to a cumulative string (`inputString`) if data is present.
+
+**2.Validating and Checking the RFID** 
+- **RFID Length Check**: Ensures that the `inputString` has accumulated exactly 10 characters, assumed to be the complete RFID sequence.
+- **RFID Validation**: Calls `checkRFID(inputString)` to validate the RFID sequence. Outputs the result to the terminal for debugging.
+
+**3. Handling Logic**  
+- **For Correct RFID**:
+  - **LEDs and Door**: Turns the GREEN LED on and the RED LED off, indicating access granted. Opens the door by setting the servo to 90 degrees.
+  - **Time Tracking**: Marks the time the door was opened to check for auto-close timing.
+- **For Incorrect RFID**:
+  - **LEDs and Door**: Turns the GREEN LED off and the RED LED on, signaling access denied. Resets the door to a closed position by setting the servo to 0 degrees.
+  - **Reset LEDs**: Briefly displays the RED LED before turning it off after a delay, preparing for the next access attempt.
+- **String Reset**: Clears `inputString` to ready the system for the next RFID read cycle.
+
+This detailed description maps out how the system handles each step of RFID data processing and the corresponding access control logic, ensuring clarity in how security and access are managed within the system.
+
+
+This Arduino sketch is crucial for the operation of the IoT-based Entry and Exit Management System, providing the necessary logic and functions to interface with physical hardware and network communications effectively. For detailed function definitions and further code implementation, refer to the full sketch in the repository.
+
+---
 
 
 
