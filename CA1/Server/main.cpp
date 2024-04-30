@@ -119,21 +119,34 @@ private:
         // Construct message with RFID and date/time
         // Get current date and time
         QDateTime currentDateTime = QDateTime::currentDateTime();
-        QString dateTimeString = currentDateTime.toString("yyyy-MM-dd HH:mm:ss");
 
-        // Construct message with RFID and date/time
-        QString message = QString("RFID: %1, Date/Time: %2").arg(rfid).arg(dateTimeString);
+        // Extract date and time separately
+        QDate currentDate = currentDateTime.date();
+        QTime currentTime = currentDateTime.time();
 
-        QByteArray data = message.toUtf8();
+        // Convert date and time to strings
+        QString dateString = currentDate.toString("yyyy-MM-dd");
+        QString timeString = currentTime.toString("HH:mm:ss");
+
+        QJsonObject messageObj;
+        messageObj["username"] = rfid;
+        messageObj["date"] = dateString;
+        messageObj["time"] = timeString;
+
+        QJsonDocument jsonDocument(messageObj);
+
+        // Convert the JSON document to a QByteArray
+        QByteArray jsonData = jsonDocument.toJson();
+
 
         // Write the data to the socket
-        qint64 bytesWritten = clientSocketpointer->write(data);
+        qint64 bytesWritten = clientSocketpointer->write(jsonData);
 
         if (bytesWritten == -1) {
             // Error handling: failed to write data
             qDebug() << "Failed to write data to socket:" << clientSocketpointer->errorString();
         } else {
-            qDebug() << "WebSocket message sent to client:" << message;
+            qDebug() << "WebSocket message sent to client:" << jsonData;
         }
     }
 };
