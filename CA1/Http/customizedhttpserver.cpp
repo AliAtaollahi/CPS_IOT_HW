@@ -19,43 +19,24 @@ bool CustomizedHttpServer::startServer(int port)
 
 QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest& request)
 {
-    // Read the JSON data from the request
     QByteArray requestData = request.body();
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(requestData);
-    Request receivedRequest = Request::fromJson(jsonDoc.object());
-    QString type = receivedRequest.getType();
-    QVariant data = receivedRequest.getData();
-    if (type == "RFID") {
-        QJsonObject jsonData = data.toJsonObject();
-        QString rfid = jsonData["rfid"].toString();
+    QString rfid = requestData;
 
-        bool permitted = employeesDatabase_.handleRfidReceived(rfid);
-        QDateTime currentTime = QDateTime::currentDateTime();
-        emit resultRfidCheck(permitted, currentTime, rfid);
+    bool isAuthorized = employeesDatabase_.handleRfidReceived(rfid);
 
-        QJsonObject resultJsonObject;
-        QHttpServerResponse::StatusCode statusCode;
-        if (permitted) {
-            resultJsonObject = QJsonObject({
-                {"status", "Succeed"},
-                {"message", "RFID accepted"},
-                {"data", QJsonValue::Null}
-            });
-            statusCode = QHttpServerResponse::StatusCode::Ok;
-        }
-        
-        else {
-            resultJsonObject = QJsonObject({
-                {"status", "Failed"},
-                {"message", "RFID is not accepted"},
-                {"data", QJsonValue::Null}
-            });
-            statusCode = QHttpServerResponse::StatusCode::Unauthorized;
-        }
+    QDateTime currentTime = QDateTime::currentDateTime();
+    emit resultRfidCheck(isAuthorized, currentTime, rfid);
 
-        QJsonDocument resultJsonDoc(resultJsonObject);
-        QByteArray resultJsonByte = resultJsonDoc.toJson();
-
-        return QHttpServerResponse(resultJsonByte, statusCode);
+    QByteArray result;
+    QHttpServerResponse::StatusCode statusCode;
+    if (isAuthorized) {
+        result = "1";
+        statusCode = QHttpServerResponse::StatusCode::Ok;
     }
+    else {
+        result = "0";
+        statusCode = QHttpServerResponse::StatusCode::Unauthorized;
+    }
+
+    return QHttpServerResponse(result, statusCode);
 }
