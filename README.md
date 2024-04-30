@@ -276,8 +276,102 @@ Continuously reads RFID tags, checks them against server-side validation, and co
 
 This detailed description maps out how the system handles each step of RFID data processing and the corresponding access control logic, ensuring clarity in how security and access are managed within the system.
 
+### checkRFID Function
+```cpp
+bool checkRFID(String tag) {
+  ether.packetLoop(ether.packetReceive());
+  byte stash_desc = stash.create();
+  stash.print("rfid=");
+  stash.print(tag);
+  stash.save();
 
-This Arduino sketch is crucial for the operation of the IoT-based Entry and Exit Management System, providing the necessary logic and functions to interface with physical hardware and network communications effectively. For detailed function definitions and further code implementation, refer to the full sketch in the repository.
+  Stash::prepare(PSTR("POST http://$F/$F HTTP/1.1\r\n"
+                      "Host: $F\r\n"
+                      "Content-Length: $D\r\n"
+                      "Content-Type: text/plain\r\n"
+                      "\r\n"
+                      "$H"),
+                 website, PSTR("rfid"), website, stash.size(), stash_desc);
+
+  byte session = ether.tcpSend();
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < TIMEOUT_TIME) { 
+    ether.packetLoop(ether.packetReceive());
+    
+    const char* reply = ether.tcpReply(session);
+    if (reply != 0) {
+
+      return true;
+    }
+
+  }
+
+  return false; // no access
+}
+```
+The `checkRFID` function sends an HTTP POST request containing RFID tag data to a server using TCP/IP communication managed by the EtherCard library. It waits for a server response within a specified timeout and interprets any received response as access granted, returning `true`; if no response is received within the timeout, it returns `false`, indicating access denied. This method effectively determines the authorization status based on server communication.Here’s an explanation of the `checkRFID` function that provides more detail on how the Arduino sketch sends HTTP requests using TCP and handles server responses to manage access control:
+
+**1. HTTP Request Using TCP and Stash**
+- **Buffer Preparation**: Begins by processing any received Ethernet packets. It then uses the `Stash` class to create a buffer for constructing the HTTP request. `Stash` is a utility for managing string and data storage in limited memory environments like Arduino.
+- **Data Stashing**: Forms an HTTP POST request containing the RFID tag. It saves this string in the stash buffer and prepares an HTTP POST request.
+- **HTTP Request Construction**: Constructs an HTTP POST request with headers and the RFID data as the body. This is formatted for the specific requirements of the server it communicates with.
+- **Sending Request**: Initiates a TCP session to send the prepared HTTP request to the predefined server IP.
+
+**2. Handling Server Response**
+- **Response Waiting Loop**: Monitors for a response from the server within a specified timeout period. This loop also processes any incoming Ethernet packets during this time to keep the network interface active.
+- **Response Evaluation**: Checks if any reply has been received for the TCP session. This implementation assumes any reply from the server indicates successful communication. 
+- **Access Decision**:
+  - **Access Granted**: If a reply is received, the function returns `true`, indicating that the server has recognized and processed the RFID data, implicitly granting access.
+  - **No Access**: If no reply is received within the timeout period, the function concludes with `false`, indicating no access granted due to a lack of response or server acknowledgment.
+
+### sendHandshake Function
+```cpp
+bool sendHandshake() {
+  ether.packetLoop(ether.packetReceive());
+  byte stash_desc = stash.create();
+  stash.print("Handshake");
+  stash.save();
+
+  Stash::prepare(PSTR("POST http://$F/$F HTTP/1.1\r\n"
+                      "Host: $F\r\n"
+                      "Content-Length: $D\r\n"
+                      "Content-Type: text/plain\r\n"
+                      "\r\n"
+                      "$H"),
+                 website, PSTR("rfid"), website, stash.size(), stash_desc);
+
+  byte session = ether.tcpSend();
+
+  unsigned long startTime = millis();
+  while (millis() - startTime < 5000) { // Timeout after 5 seconds
+    ether.packetLoop(ether.packetReceive());
+
+    // Flush the Ethernet buffer
+    while (ether.tcpReply(session) != 0) {
+      // Read and discard the data
+      const char* reply = ether.tcpReply(session);
+    }
+  }
+
+  return true;
+}
+```
+
+The sendHandshake function in our code is designed to establish an initial communication session between the Arduino-based system and a server. This handshake is critical as it sets up a preliminary connection with the server, reducing the overhead for subsequent RFID tag transmissions by ensuring the communication channel is open and responsive. Here’s a breakdown focusing on the core components and their purposes:
+
+### 1. **Packet Handling and Data Preparation**
+- **Packet Processing**: Begins by processing any packets that have been received to keep the Ethernet interface active.
+- **Stash Setup**: Utilizes the `Stash` class to create a temporary storage (stash) for the handshake message. This message is simply the string "Handshake".
+- **HTTP Request Preparation**: Constructs an HTTP POST request using the stored "Handshake" message. The request is formatted with headers specifying the host, content length, and content type. 
+
+### 2. **Sending the Request and Monitoring Response**
+- **Sending Request**: Initiates a TCP session using `ether.tcpSend()` to transmit the prepared HTTP request to the server.
+- **Response Handling**: Monitors for a server response over a fixed timeout period of 5 seconds. This loop ensures that the Arduino continues to process incoming packets during this wait period.
+
+### 3. **Cleanup and Return**
+- **Buffer Flushing**: Continuously checks for a reply within the given timeout. If a reply is received, it reads and discards the data to clear the buffer.
+- **Function Exit**: The function returns `true` after the timeout period, regardless of whether a response was received or not. This implies that the handshake is considered complete after attempting to communicate, without verifying the success of the handshake explicitly.
 
 ---
 
