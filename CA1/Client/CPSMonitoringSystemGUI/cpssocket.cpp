@@ -8,6 +8,10 @@ CPSSocket::CPSSocket(QObject *parent) : QObject(parent) {
     //QObject::connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
 }
 
+QTcpSocket* CPSSocket::getSocket() const {
+    return socket;
+}
+
 void CPSSocket::connectToServer(const QString &serverAddress, const QString &username, const QString &password) {
     // Connect to the server
     socket->connectToHost(serverAddress, 5050);
@@ -28,9 +32,8 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
 
             if(responseData == "1")
             {
-                emit connectionChanged(true);
+                emit connectionChanged(false);
                 QTextStream(stdout) << "kkkkkkkkkkkkkkkkkkkk";
-                //collectingNewData();
                 QObject::connect(socket, &QTcpSocket::readyRead, this, &CPSSocket::collectingNewData);
                 QTextStream(stdout) << "pppppppppppppppppppppppppppp";
 
@@ -49,8 +52,6 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
 
 
 void CPSSocket::collectingNewData() {
-
-    // Read the data from the socket
     QByteArray responseData = socket->readAll();
 
     // Parse the JSON data
@@ -58,14 +59,24 @@ void CPSSocket::collectingNewData() {
     if (!jsonDocument.isNull() && jsonDocument.isObject()) {
         QJsonObject jsonObject = jsonDocument.object();
 
-        // Extract username, date, and time from the JSON object
-        QString username = jsonObject["username"].toString();
-        QString date = jsonObject["date"].toString();
-        QString time = jsonObject["time"].toString();
-
-        // Emit the newUser signal with the extracted username, date, and time
-        emit newUser(username, date, time);
+        // Check the type field
+        if (jsonObject.contains("type") && jsonObject["type"].toString() == "user") {
+           ExtractNewUserData(jsonObject);
+        } else if (jsonObject.contains("type") && jsonObject["type"].toString() == "history") {
+           emit newHistory(jsonObject);
+        } else {
+            qDebug() << "Invalid type field in JSON data";
+        }
     } else {
         qDebug() << "Failed to parse JSON data";
     }
+}
+
+void CPSSocket::ExtractNewUserData(const QJsonObject &jsonObject) {
+
+    QString username = jsonObject["username"].toString();
+    QString date = jsonObject["date"].toString();
+    QString time = jsonObject["time"].toString();
+
+    emit newUser(username, date, time);
 }

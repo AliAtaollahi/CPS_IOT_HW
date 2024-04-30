@@ -1,5 +1,6 @@
 MonitoringSystem_autogen/timestamp: \
 	D:/qt/6.7.0/mingw_64/include/QtCore/QJsonArray \
+	D:/qt/6.7.0/mingw_64/include/QtCore/QJsonDocument \
 	D:/qt/6.7.0/mingw_64/include/QtCore/QJsonObject \
 	D:/qt/6.7.0/mingw_64/include/QtCore/QObject \
 	D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
@@ -63,6 +64,7 @@ MonitoringSystem_autogen/timestamp: \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qiterable.h \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qjsonarray.h \
+	D:/qt/6.7.0/mingw_64/include/QtCore/qjsondocument.h \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qjsonobject.h \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qjsonvalue.h \
 	D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h \

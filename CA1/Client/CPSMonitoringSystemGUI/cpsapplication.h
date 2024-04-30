@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QApplication>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #include "cpsmainwindow.h"
 #include "cpshistorywindow.h"
@@ -26,7 +28,8 @@ Q_SIGNALS:
 
 
 private Q_SLOTS:
-    void showHistoryWindow();
+    void showHistoryWindow(const QJsonObject &jsonObject);
+    void sendHistoryRequest();
     void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
 
    // void connectToServer();

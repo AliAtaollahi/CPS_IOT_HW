@@ -9,17 +9,21 @@ class CPSSocket : public QObject {
     Q_OBJECT
 public:
     explicit CPSSocket(QObject *parent = nullptr);
+    QTcpSocket* getSocket() const;
 
-public slots:
+public Q_SLOTS:
     void connectToServer(const QString &serverAddress, const QString &username, const QString &password);
     void collectingNewData(); // Method to collect new data
 
+
 private:
     QTcpSocket *socket;
+    void ExtractNewUserData(const QJsonObject &jsonObject);
 
-signals:
+Q_SIGNALS:
     void newUser(const QString &username, const QString &date, const QString &time);
     void connectionChanged(bool enabled);
+    void newHistory(const QJsonObject &jsonObject);
 
 
 };

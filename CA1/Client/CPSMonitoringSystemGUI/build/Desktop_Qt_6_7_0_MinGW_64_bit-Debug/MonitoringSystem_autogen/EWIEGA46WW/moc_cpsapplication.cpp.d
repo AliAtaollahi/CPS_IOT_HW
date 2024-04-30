@@ -1,6 +1,7 @@
 F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/EWIEGA46WW/moc_cpsapplication.cpp: F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/CPSMonitoringSystemGUI/cpsapplication.h \
   F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/moc_predefs.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/QJsonArray \
+  D:/qt/6.7.0/mingw_64/include/QtCore/QJsonDocument \
   D:/qt/6.7.0/mingw_64/include/QtCore/QJsonObject \
   D:/qt/6.7.0/mingw_64/include/QtCore/QObject \
   D:/qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
@@ -64,6 +65,7 @@ F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/CPSMonitoringSystemGUI/buil
   D:/qt/6.7.0/mingw_64/include/QtCore/qiterable.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qjsonarray.h \
+  D:/qt/6.7.0/mingw_64/include/QtCore/qjsondocument.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qjsonobject.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qjsonvalue.h \
   D:/qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h \

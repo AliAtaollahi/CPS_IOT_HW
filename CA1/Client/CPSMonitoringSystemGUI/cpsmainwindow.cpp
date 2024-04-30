@@ -71,8 +71,7 @@ void MainWindow::setUsername(const QString &username)
 
 void MainWindow::changeRightPanelEnabled(bool enabled)
 {
-    QTextStream(stdout) << "ooooooooooooooooooooooooooooooo";
-    _rightPanel->setEnabled(enabled);
+    _connectBtn->setEnabled(enabled);
 }
 
 void MainWindow::showUserDetails(const QString &username, const QString &date, const QString &time)
