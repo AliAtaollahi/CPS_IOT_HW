@@ -472,6 +472,22 @@ Several key modifications and new features were integrated into `cpsapplication.
    QObject::connect(_socket, &CPSSocket::connectionChanged, _window, &MainWindow::changeRightPanelEnabled);
    ```
    This line connects the `connectionChanged` signal from the `CPSSocket` class to the `changeRightPanelEnabled` slot in the `MainWindow`. It enables or disables GUI elements based on the current network connection status (e.g., disabling the connect button to prevent duplicate connections).
+   
+Also We have made an update to the method responsible for enabling or disabling UI components in the `MainWindow` class. This change enhances the usability and responsiveness of the user interface. (in cpsmainwindow.cpp)
+Previous Code:
+```cpp
+void MainWindow::changeRightPanelEnabled(bool enabled)
+{
+    _rightPanel->setEnabled(enabled);
+}
+```
+Updated Code:
+```cpp
+void MainWindow::changeRightPanelEnabled(bool enabled){
+    _connectBtn->setEnabled(enabled);
+}
+```
+
 
 These connections are fundamental for the interactivity and responsiveness of our client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable our system to handle data efficiently, ensuring that the GUI reflects the most current system status and logs.
 
