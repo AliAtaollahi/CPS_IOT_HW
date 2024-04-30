@@ -79,7 +79,6 @@ bool sendHandshake() {
 bool checkRFID(String tag) {
   ether.packetLoop(ether.packetReceive());
   byte stash_desc = stash.create();
-  stash.print("rfid=");
   stash.print(tag);
   stash.save();
 
@@ -106,7 +105,7 @@ bool checkRFID(String tag) {
       /*Serial.println(reply);
       Serial.println(status);*/
 
-      return strcmp(status, "OK") == 0 ? true : false;;
+      return strcmp(status, "OK") == 0 ? true : false;
     }
     delay(200);
 
