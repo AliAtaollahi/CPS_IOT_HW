@@ -121,7 +121,7 @@ The embedded software for the IoT-based Entry and Exit Management System is desi
 #### Configuration
 
 ```cpp
-#define TIMEOUT_TIME 200
+#define TIMEOUT_TIME 1000
 #define GREEN_LED 2
 #define RED_LED 3
 #define RX_PIN 0
@@ -281,7 +281,6 @@ This detailed description maps out how the system handles each step of RFID data
 bool checkRFID(String tag) {
   ether.packetLoop(ether.packetReceive());
   byte stash_desc = stash.create();
-  stash.print("rfid=");
   stash.print(tag);
   stash.save();
 
@@ -296,34 +295,45 @@ bool checkRFID(String tag) {
   byte session = ether.tcpSend();
 
   unsigned long startTime = millis();
-  while (millis() - startTime < TIMEOUT_TIME) { 
+  while (millis() - startTime < TIMEOUT_TIME) {
     ether.packetLoop(ether.packetReceive());
     
     const char* reply = ether.tcpReply(session);
     if (reply != 0) {
 
-      return true;
+      
+      char status[3];
+      getStatus(reply, status);
+      /*Serial.println(reply);
+      Serial.println(status);*/
+
+      return strcmp(status, "OK") == 0 ? true : false;
     }
+    delay(200);
 
   }
 
   return false; // no access
 }
 ```
-The `checkRFID` function sends an HTTP POST request containing RFID tag data to a server using TCP/IP communication managed by the EtherCard library. It waits for a server response within a specified timeout and interprets any received response as access granted, returning `true`; if no response is received within the timeout, it returns `false`, indicating access denied. This method effectively determines the authorization status based on server communication.Here’s an explanation of the `checkRFID` function that provides more detail on how the Arduino sketch sends HTTP requests using TCP and handles server responses to manage access control:
+This function encapsulates a network interaction pattern where an RFID tag is sent to a server for authorization. The use of a TCP/IP stack (via the EtherCard library) and careful handling of Ethernet buffers and sessions allows for efficient network communications on resource-constrained devices like those running Arduino. The decision to grant or deny access is made based on the server's response to the transmitted RFID tag.
 
-**1. HTTP Request Using TCP and Stash**
-- **Buffer Preparation**: Begins by processing any received Ethernet packets. It then uses the `Stash` class to create a buffer for constructing the HTTP request. `Stash` is a utility for managing string and data storage in limited memory environments like Arduino.
-- **Data Stashing**: Forms an HTTP POST request containing the RFID tag. It saves this string in the stash buffer and prepares an HTTP POST request.
-- **HTTP Request Construction**: Constructs an HTTP POST request with headers and the RFID data as the body. This is formatted for the specific requirements of the server it communicates with.
-- **Sending Request**: Initiates a TCP session to send the prepared HTTP request to the predefined server IP.
+**1. Packet Processing and Stash Setup**
+- **Packet Processing**: The function starts by handling any pending Ethernet packets with `ether.packetReceive()` and immediately passes them to `ether.packetLoop()`. This ensures the Ethernet buffer is processed and ready for new operations.
+- **Stash Buffer**: A stash buffer is created with `stash.create()` for building the HTTP POST request. The RFID tag data is added to the stash using `stash.print(tag)` and finalized with `stash.save()`.
 
-**2. Handling Server Response**
-- **Response Waiting Loop**: Monitors for a response from the server within a specified timeout period. This loop also processes any incoming Ethernet packets during this time to keep the network interface active.
-- **Response Evaluation**: Checks if any reply has been received for the TCP session. This implementation assumes any reply from the server indicates successful communication. 
-- **Access Decision**:
-  - **Access Granted**: If a reply is received, the function returns `true`, indicating that the server has recognized and processed the RFID data, implicitly granting access.
-  - **No Access**: If no reply is received within the timeout period, the function concludes with `false`, indicating no access granted due to a lack of response or server acknowledgment.
+**2. HTTP POST Request Preparation**
+- **HTTP Request Setup**: An HTTP POST request is constructed with a path and host extracted from predefined variables (`website`). The `Stash::prepare` method is used, inserting various elements into the HTTP headers such as the path, host, content length (determined by `stash.size()`), and the stash descriptor.
+- **Sending the Request**: `ether.tcpSend()` is called to open a TCP connection and send the prepared HTTP request. The ID of the TCP session is stored for later reference.
+
+**3. Response Handling**
+- **Response Timeout Loop**: The function waits for a server response within `TIMEOUT_TIME`. It continuously checks for responses by processing incoming packets and using `ether.tcpReply(session)` to check for replies specifically related to the opened TCP session.
+- **Extracting Status from Response**: If a response is detected, the function extracts a status code using a helper function `getStatus(reply, status)`. It then compares this status string with "OK".
+  - **Access Granted**: If the status is "OK", the function returns `true`, indicating that access has been authorized based on the server's positive acknowledgment of the RFID data.
+  - **No Response or Non-OK Status**: If the timeout expires without a response, or if the response status is not "OK", the function returns `false`, indicating that access has been denied.
+
+**4. Delay Handling**
+- **Network Delay**: Between each check for responses, there is a delay of 200 milliseconds to reduce the load on the network interface and prevent flooding the network with rapid packet checks.
 
 ### sendHandshake Function
 ```cpp
@@ -433,10 +443,6 @@ private: // members
 
 Several key modifications and new features were integrated into `cpsapplication.cpp` to enhance functionality and user experience:
 
-Certainly! The code lines you've provided involve the use of Qt's signal and slot mechanism, which is essential for handling asynchronous events in the application. Below is a detailed explanation of each connection made in `cpsapplication.cpp`:
-
-##### Detailed Explanation of Signal-Slot Connections:
-
 1. **Requesting History Data:**
    ```cpp
    QObject::connect(_window, &MainWindow::historyBtnClicked, this, &Application::sendHistoryRequest);
@@ -467,7 +473,7 @@ Certainly! The code lines you've provided involve the use of Qt's signal and slo
    ```
    This line connects the `connectionChanged` signal from the `CPSSocket` class to the `changeRightPanelEnabled` slot in the `MainWindow`. It enables or disables GUI elements based on the current network connection status (e.g., disabling the connect button to prevent duplicate connections).
 
-These connections are fundamental for the interactivity and responsiveness of your client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable your system to handle real-time data efficiently, ensuring that the GUI reflects the most current system status and logs.
+These connections are fundamental for the interactivity and responsiveness of your client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable your system to handle data efficiently, ensuring that the GUI reflects the most current system status and logs.
 
 ##### History Window Display Logic:  
 Developed a method to process and display the history data received from the server. The method parses the JSON data, extracting necessary details and passing them to the history window for display.
@@ -496,7 +502,7 @@ void Application::showHistoryWindow(const QJsonObject &jsonObject)
 }
 ```
 ### Client Socket Implementation
-This section details the implementation of the `CPSSocket` class, which handles all TCP/IP communications between the client-side application and the server. This class is pivotal for sending and receiving data over the network, authenticating users, and retrieving real-time updates about entry events and history.
+This section details the implementation of the `CPSSocket` class, which handles all TCP/IP communications between the client-side application and the server. This class is pivotal for sending and receiving data over the network, authenticating admin, and retrieving updates about entry events and history.
 
 #### `cpssocket.h`
 
@@ -584,7 +590,7 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
   - **Connection Attempt**: Attempts to connect to the specified server address on port 5050.
   - **Authentication**: Sends a combined string of username and password.
   - **Response Handling**: Waits for a response from the server to confirm connection and authentication success.
-  - **Signal Emission**: If authenticated (`responseData` equals "1"), disables further connection attempts and sets up to receive new data.
+  - **Signal Emission**: If authenticated (`responseData` equals "1"), disables further connection attempts and sets up to receive new data. (using `collectingNewData` )
   - **Error Handling**: Outputs errors if connection fails or times out.
 
 **4. Collecting New Data**
