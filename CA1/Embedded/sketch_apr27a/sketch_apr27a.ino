@@ -39,16 +39,6 @@ boolean doorOpen = false;
 unsigned long doorOpenTime = 0;
 Stash stash;
 
-static void my_result_cb(byte status, word off, word len)
-{
-  Serial.println("Server received the message.");
-}
-
-// Function to check the sequence
-boolean checkSequence(String sequence) {
-  String expectedSequence = "1111111111";
-  return (sequence == expectedSequence);
-}
 
 
 void getStatus(char* reply, char* status) { 
@@ -111,6 +101,7 @@ bool checkRFID(String tag) {
       
       char status[3];
       getStatus(reply, status);
+      // for debugging
       /*Serial.println(reply);
       Serial.println(status);*/
 
@@ -130,7 +121,6 @@ void setup() {
   pinMode(TX_PIN, OUTPUT);
   pinMode(EN, OUTPUT);
   lcd.begin(25,2);
-  //digitalWrite(EN, LOW);
   doorServo.attach(SERVO_PIN);
   doorServo.write(0);
   Serial.begin(9600);
@@ -164,12 +154,9 @@ void loop() {
   
   if (doorOpen) {
     // Check if 30 seconds have elapsed since the door was opened
-    if (millis() - doorOpenTime >= 5000) {
+    if (millis() - doorOpenTime >= 30000) {
       doorOpen = false;
       doorServo.write(0);
-      //digitalWrite(EN, LOW);
-      //lcd.clear();
-      //digitalWrite(LEDS, LOW);
       inputString = "";
     }
   }
@@ -179,17 +166,14 @@ void loop() {
         lcd.clear();
         boolean sequenceResult = checkRFID(inputString);
 
-      //boolean sequenceResult = checkSequence(inputString);
 
       Serial.println("  \n ");
       Serial.print("Sequence Check Result: ");
       Serial.println(sequenceResult ? "Correct" : "Incorrect");
       
       if (sequenceResult) {
-        //digitalWrite(EN, HIGH);
         lcd.print(inputString);
         inputString = "";
-        //digitalWrite(EN, HIGH);
         
         digitalWrite(LEDS, HIGH);
         doorServo.write(90);
@@ -197,16 +181,12 @@ void loop() {
         doorOpenTime = millis(); // Record the time when the door was opened
       } else {
         // If the sequence is incorrect, close the door
-        //digitalWrite(EN, HIGH);
         lcd.print("Access denied");
-        //digitalWrite(EN, HIGH);
         
         digitalWrite(LEDS, LOW);
         doorServo.write(0);
-		    //const char jsonPayload[] PROGMEM = "{\"message\":\"hello\"}";
 		    
         delay(500);
-        //digitalWrite(EN, LOW);
         doorOpen = false;
       }
       inputString = "";
