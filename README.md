@@ -1431,10 +1431,6 @@ int main(int argc, char *argv[]) {
 }
 ```
 
-
-
-This setup demonstrates a straightforward, robust server initialization and execution strategy, leveraging Qt's capabilities for effective network communication and event handling within a server environment.
-
 ### Data Folder
 Contains JSON files used for initial data setup and storage, facilitating quick data retrieval and management.
 1. `admins.json`
