@@ -1,0 +1,12 @@
+[
+  {
+    "rfidTag_": "1234",
+    "loginTime_": "2018-01-01T00:00:00Z",
+    "permited_": true
+  },
+  {
+    "rfidTag_": "5678",
+    "loginTime_": "2018-01-01T00:00:00Z",
+    "permited_": false
+  }
+]

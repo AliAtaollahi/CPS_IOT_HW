@@ -1,4 +1,4 @@
-# Install script for directory: F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server
+# Install script for directory: D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,15 +34,15 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "D:/qt/Tools/mingw1120_64/bin/objdump.exe")
+  set(CMAKE_OBJDUMP "D:/tools/QT/Tools/mingw1120_64/bin/objdump.exe")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server.exe")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server.exe")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/server.exe" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/server.exe")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "D:/qt/Tools/mingw1120_64/bin/strip.exe" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/server.exe")
+      execute_process(COMMAND "D:/tools/QT/Tools/mingw1120_64/bin/strip.exe" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/server.exe")
     endif()
   endif()
 endif()
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -1,2 +1,2 @@
-set(__QT_DEPLOY_TARGET_MonitoringSystem_FILE F:/university/T_8/CPS/CAs/ca1/CPSMonitoringSystemGUI/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem.exe)
-set(__QT_DEPLOY_TARGET_MonitoringSystem_RUNTIME_DLLS D:/qt/6.7.0/mingw_64/bin/Qt6Widgets.dll;D:/qt/6.7.0/mingw_64/bin/Qt6Network.dll;D:/qt/6.7.0/mingw_64/bin/Qt6Gui.dll;D:/qt/6.7.0/mingw_64/bin/Qt6Core.dll)
+set(__QT_DEPLOY_TARGET_MonitoringSystem_FILE D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem.exe)
+set(__QT_DEPLOY_TARGET_MonitoringSystem_RUNTIME_DLLS D:/tools/QT/6.7.0/mingw_64/bin/Qt6Widgets.dll;D:/tools/QT/6.7.0/mingw_64/bin/Qt6Network.dll;D:/tools/QT/6.7.0/mingw_64/bin/Qt6Gui.dll;D:/tools/QT/6.7.0/mingw_64/bin/Qt6Core.dll)

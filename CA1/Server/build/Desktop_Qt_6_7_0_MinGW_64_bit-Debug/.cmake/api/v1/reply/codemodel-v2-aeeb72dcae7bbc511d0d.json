@@ -1,0 +1,79 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f20fa5edc2243cffae67.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "server",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "server::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-server-Debug-561d3881cf140520d054.json",
+					"name" : "server",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "server_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-server_autogen-Debug-2bc2fc32ca8681ea10e1.json",
+					"name" : "server_autogen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "server_autogen_timestamp_deps::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-server_autogen_timestamp_deps-Debug-09284cd0527db02c79f6.json",
+					"name" : "server_autogen_timestamp_deps",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug",
+		"source" : "D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 6
+	}
+}

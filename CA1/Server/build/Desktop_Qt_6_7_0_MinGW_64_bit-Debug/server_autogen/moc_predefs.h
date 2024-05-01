@@ -317,6 +317,7 @@
 #define __FLT64X_MAX_EXP__ 16384
 #define __UINT_FAST64_TYPE__ long long unsigned int
 #define __cpp_inline_variables 201606L
+#define QT_WEBSOCKETS_LIB 1
 #define __INT_MAX__ 0x7fffffff
 #define WIN32 1
 #define __nocona 1
@@ -365,6 +366,7 @@
 #define __INT_FAST8_TYPE__ signed char
 #define __fastcall __attribute__((__fastcall__))
 #define __cpp_namespace_attributes 201411L
+#define QT_HTTPSERVER_LIB 1
 #define __FLT64X_MIN__ 3.36210314311209350626267781732175260e-4932F64x
 #define __STDCPP_THREADS__ 1
 #define __GNUC_STDC_INLINE__ 1

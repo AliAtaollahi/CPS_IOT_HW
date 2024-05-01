@@ -51,7 +51,7 @@ void SocketServer::authenticateUser(const QByteArray &data, QTcpSocket *clientSo
         QString password = QString::fromUtf8(parts[1]);
         bool isValid = isValidUser(username, password);
         if (isValid) {
-            //this->clientSocketpointer = clientSocket;
+            this->clientSocketpointer = clientSocket;
             clientSocket->write("1");
             qDebug() << "Access granted for:" << username;
         } else {
@@ -60,6 +60,7 @@ void SocketServer::authenticateUser(const QByteArray &data, QTcpSocket *clientSo
             clientSocket->close();
         }
         qDebug() << "Username:" << username << "Password:" << password;
+        sendNewUserDataToAdmin("123456");
     } else {
         qDebug() << "Invalid message format";
     }
