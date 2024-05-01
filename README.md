@@ -680,6 +680,7 @@ This folder contains all necessary files for setting up and running the server t
 These files together define and implement a custom HTTP server tailored for our IoT system. The header file declares the server class and necessary methods, while the implementation file details how the server handles HTTP requests and responses.
 
 **`.h` file:**
+
 ```cpp
 #ifndef CUSTOMIZEDHTTPSERVER_H
 #define CUSTOMIZEDHTTPSERVER_H
@@ -776,7 +777,6 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
     return QHttpServerResponse(result, statusCode);
 }
 ```
-This setup ensures robust handling of access control requests, providing secure and efficient authentication management tailored to the needs of the IoT system.
 
 #### `employee.cpp` & `employee.h`
 These files define and implement the Employee class, responsible for encapsulating employee-related data within the system.
@@ -1319,7 +1319,7 @@ void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHist
         clientSocketpointer->write(jsonData);
     }
 }
-``
+```
 
 #### `main.cpp`
 The `main` function of the application serves as the entry point, initializing and running the HTTP server that forms the core of the system's network interactions.
