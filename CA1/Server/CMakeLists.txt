@@ -21,6 +21,8 @@ add_executable(server
   employeesdatabase.h employeesdatabase.cpp
   loginhistory.h loginhistory.cpp
   loginhistorydatabase.h loginhistorydatabase.cpp
+  authenticator.h
+  authenticator.cpp
 )
 target_link_libraries(server PRIVATE
     Qt${QT_VERSION_MAJOR}::Core

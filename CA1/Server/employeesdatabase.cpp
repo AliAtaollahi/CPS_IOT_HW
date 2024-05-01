@@ -6,7 +6,7 @@
 
 EmployeesDatabase::EmployeesDatabase(const QString &initialDataPath, QObject *parent) : QObject(parent)
 {
-    readEmployeesFromJson(initialDataPath);
+    loadEmployeesFromJson(initialDataPath);
 }
 
 const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
@@ -14,27 +14,40 @@ const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
     return employeesVector_;
 }
 
-void EmployeesDatabase::readEmployeesFromJson(const QString &path)
+void EmployeesDatabase::loadEmployeesFromJson(const QString &path)
+{
+    QByteArray jsonData = readJsonFile(path);
+    if (!jsonData.isEmpty()) {
+        parseEmployeesJson(jsonData);
+    }
+}
+
+QByteArray EmployeesDatabase::readJsonFile(const QString &path)
 {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Failed to open " + path;
-        return;
+        return QByteArray();
     }
 
     QByteArray jsonData = file.readAll();
     file.close();
 
+    return jsonData;
+}
+
+void EmployeesDatabase::parseEmployeesJson(const QByteArray &jsonData)
+{
     QJsonDocument doc = QJsonDocument::fromJson(jsonData);
     if (!doc.isArray()) {
-        qDebug() << "Invalid JSON format in " + path;
+        qDebug() << "Invalid JSON format";
         return;
     }
 
     QJsonArray employeesArray = doc.array();
     for (const QJsonValue& employeeValue : employeesArray) {
         if (!employeeValue.isObject()) {
-            qDebug() << "Invalid employee data in " + path;
+            qDebug() << "Invalid employee data";
             continue;
         }
 
@@ -46,7 +59,8 @@ void EmployeesDatabase::readEmployeesFromJson(const QString &path)
     }
 }
 
-bool EmployeesDatabase::handleRfidReceived(const QString &rfid) {
+bool EmployeesDatabase::checkRFIDMatch(const QString &rfid)
+{
     bool isMatch = false;
     for (const Employee &employee : employeesVector_) {
         if (employee.checkRFIDTagMatched(rfid)) {
