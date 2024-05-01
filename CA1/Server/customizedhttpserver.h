@@ -20,12 +20,10 @@ public:
     bool startServer(int port);
 
 signals:
-    void resultRfidCheck(bool isMatch, const QDateTime &currentTime, const QString &rfid);
-
-private slots:
-    QHttpServerResponse handleRequest(const QHttpServerRequest &request);
+    void resultRfidCheck(bool isMatch, const QString &rfid);
 
 private:
+    QHttpServerResponse handleRequest(const QHttpServerRequest &request);
     QHttpServer* httpServer_;
     EmployeesDatabase employeesDatabase_;
 };

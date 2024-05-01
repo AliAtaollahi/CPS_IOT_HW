@@ -1,10 +1,13 @@
 D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/EWIEGA46WW/moc_socketserver.cpp: D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/socketserver.h \
   D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/server_autogen/moc_predefs.h \
+  D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Server/loginhistory.h \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/QDateTime \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/QDebug \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/QJsonArray \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/QJsonDocument \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/QJsonObject \
+  D:/tools/QT/6.7.0/mingw_64/include/QtCore/QObject \
+  D:/tools/QT/6.7.0/mingw_64/include/QtCore/QString \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/q20functional.h \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/q20memory.h \
   D:/tools/QT/6.7.0/mingw_64/include/QtCore/q20type_traits.h \

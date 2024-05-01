@@ -1,6 +1,5 @@
 // customizedhttpserver.cpp
 #include "customizedhttpserver.h"
-#include "request.h"
 
 CustomizedHttpServer::CustomizedHttpServer(int port, const QString &initialDataPath, QObject *parent) :
     QObject(parent), employeesDatabase_(EmployeesDatabase(initialDataPath)), httpServer_(new QHttpServer())
@@ -24,8 +23,7 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
 
     bool isAuthorized = employeesDatabase_.handleRfidReceived(rfid);
 
-    QDateTime currentTime = QDateTime::currentDateTime();
-    emit resultRfidCheck(isAuthorized, currentTime, rfid);
+    emit resultRfidCheck(isAuthorized, rfid);
 
     QByteArray result;
     QHttpServerResponse::StatusCode statusCode;

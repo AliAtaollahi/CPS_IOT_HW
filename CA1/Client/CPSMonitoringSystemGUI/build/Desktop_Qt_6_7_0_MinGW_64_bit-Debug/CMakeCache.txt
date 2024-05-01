@@ -132,7 +132,7 @@ CMAKE_INSTALL_MANDIR:PATH=
 CMAKE_INSTALL_OLDINCLUDEDIR:PATH=/usr/include
 
 //Install path prefix, prepended onto install directories.
-CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/MonitoritngSystem
+CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/MonitoringSystem
 
 //Run-time variable data (LOCALSTATEDIR/run)
 CMAKE_INSTALL_RUNSTATEDIR:PATH=
@@ -302,15 +302,6 @@ MonitoringSystem_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 MonitoringSystem_SOURCE_DIR:STATIC=D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI
-
-//Value Computed by CMake
-MonitoritngSystem_BINARY_DIR:STATIC=D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug
-
-//Value Computed by CMake
-MonitoritngSystem_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-MonitoritngSystem_SOURCE_DIR:STATIC=D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI
 
 //Additional directories where find(Qt6 ...) host Qt components
 // are searched
@@ -1345,5 +1336,5 @@ Vulkan_LIBRARY-ADVANCED:INTERNAL=1
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //CMAKE_INSTALL_PREFIX during last run
-_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/MonitoritngSystem
+_GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=C:/Program Files (x86)/MonitoringSystem
 

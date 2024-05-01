@@ -17,10 +17,10 @@ add_executable(server
   main.cpp
   socketserver.h socketserver.cpp
   customizedhttpserver.h customizedhttpserver.cpp
-  request.h request.cpp
-  response.h response.cpp
   employee.h employee.cpp
   employeesdatabase.h employeesdatabase.cpp
+  loginhistory.h loginhistory.cpp
+  loginhistorydatabase.h loginhistorydatabase.cpp
 )
 target_link_libraries(server PRIVATE
     Qt${QT_VERSION_MAJOR}::Core

@@ -18,6 +18,7 @@ void SocketServer::incomingConnection(qintptr socketDescriptor) {
         QByteArray data = clientSocket->readAll();
         qDebug() << "Received:" << data;
         processData(data, clientSocket);
+        clientSocketpointer = clientSocket;
 
     });
 
@@ -32,10 +33,10 @@ bool SocketServer::isValidRFID(const QString &rfid) {
 }
 
 void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
+    qDebug() << "in  SocketServer::processData";
     if(data == "historyRequest"){
-        QByteArray jsonData = retrieveHistoryData();
         qDebug() << "i am still in historyRequest.";
-        clientSocket->write(jsonData);
+        emit requestLoginHistory();
         qDebug() << "i have sent message in historyRequest.";
     }
     else{
@@ -51,7 +52,7 @@ void SocketServer::authenticateUser(const QByteArray &data, QTcpSocket *clientSo
         QString password = QString::fromUtf8(parts[1]);
         bool isValid = isValidUser(username, password);
         if (isValid) {
-            this->clientSocketpointer = clientSocket;
+            //this->clientSocketpointer = clientSocket;
             clientSocket->write("1");
             qDebug() << "Access granted for:" << username;
         } else {
@@ -60,51 +61,16 @@ void SocketServer::authenticateUser(const QByteArray &data, QTcpSocket *clientSo
             clientSocket->close();
         }
         qDebug() << "Username:" << username << "Password:" << password;
-        sendNewUserDataToAdmin("123456");
     } else {
         qDebug() << "Invalid message format";
     }
-}
-
-QByteArray SocketServer::retrieveHistoryData(){
-    qDebug() << "i am in historyRequest.";
-    // Create the JSON array for the data
-    QJsonArray dataArray;
-
-    // Create the first JSON object
-    QJsonObject obj1;
-    obj1["username"] = "user1";
-    obj1["date"] = "2024-04-30";
-    obj1["time"] = "10:00";
-
-    // Create the second JSON object
-    QJsonObject obj2;
-    obj2["username"] = "user2";
-    obj2["date"] = "2024-04-30";
-    obj2["time"] = "11:30";
-
-    // Add the JSON objects to the data array
-    dataArray.append(obj1);
-    dataArray.append(obj2);
-
-    // Create the main JSON object
-    QJsonObject mainObj;
-    mainObj["type"] = "history"; // Add the "type" field
-    mainObj["data"] = dataArray; // Add the "data" field with the array
-
-    // Convert the main JSON object to a JSON document
-    QJsonDocument jsonDocument(mainObj);
-
-    // Convert the JSON document to a QByteArray
-    QByteArray jsonData = jsonDocument.toJson();
-    return jsonData;
 }
 
 bool SocketServer::isValidUser(const QString &username, const QString &password) {
     return (username == "test" && password == "1234");
 }
 
-void SocketServer::sendNewUserDataToAdmin(const QString &rfid) {
+void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
     // Construct message with RFID and date/time
     // Get current date and time
     QDateTime currentDateTime = QDateTime::currentDateTime();
@@ -128,8 +94,7 @@ void SocketServer::sendNewUserDataToAdmin(const QString &rfid) {
     // Convert the JSON document to a QByteArray
     QByteArray jsonData = jsonDocument.toJson();
 
-
-    // Write the data to the socket
+    // // Write the data to the socket
     qint64 bytesWritten = clientSocketpointer->write(jsonData);
 
     if (bytesWritten == -1) {
@@ -137,5 +102,31 @@ void SocketServer::sendNewUserDataToAdmin(const QString &rfid) {
         qDebug() << "Failed to write data to socket:" << clientSocketpointer->errorString();
     } else {
         qDebug() << "WebSocket message sent to client:" << jsonData;
+    }
+}
+
+
+void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHistories){
+    if (this->clientSocketpointer) {
+        QJsonArray dataArray;
+
+        for (const LoginHistory &entry : loginHistories) {
+            QJsonObject obj;
+            obj["username"] = entry.getUsername();
+            obj["date"] = entry.getDate();
+            obj["time"] = entry.getTime();
+            obj["permitted"] = entry.isPermitted();
+            dataArray.append(obj);
+        }
+        QJsonObject mainObj;
+        mainObj["type"] = "history"; // Add the "type" field
+        mainObj["data"] = dataArray; // Add the "data" field with the array
+
+        // Convert the main JSON object to a JSON document
+        QJsonDocument jsonDocument(mainObj);
+
+        // Convert the JSON document to a QByteArray
+        QByteArray jsonData = jsonDocument.toJson();
+        clientSocketpointer->write(jsonData);
     }
 }

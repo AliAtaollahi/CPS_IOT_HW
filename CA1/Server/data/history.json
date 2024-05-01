@@ -1,12 +1,14 @@
 [
   {
-    "rfidTag_": "1234",
-    "loginTime_": "2018-01-01T00:00:00Z",
+    "username": "1234",
+    "date": "2024-04-30",
+    "time": "10:00",
     "permited_": true
   },
   {
-    "rfidTag_": "5678",
-    "loginTime_": "2018-01-01T00:00:00Z",
+    "username": "5678",
+    "date": "2024-04-30",
+    "time": "11:30",
     "permited_": false
   }
 ]

@@ -1,6 +1,8 @@
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 
+#include "loginhistory.h"
+
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDebug>
@@ -20,9 +22,15 @@ protected:
     bool isValidRFID(const QString &rfid);
     void processData(QByteArray &data, QTcpSocket *clientSocket);
     bool isValidUser(const QString &username, const QString &password);
-    void sendNewUserDataToAdmin(const QString &rfid);
     QByteArray retrieveHistoryData();
     void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
+
+signals:
+    void requestLoginHistory();
+
+public slots:
+    void sendNewUserDataToAdmin(bool isMatch, const QString &rfid);
+    void SendLoginHistoryResult(const QVector<LoginHistory> &loginHistories);
 
 private:
     QStringList hardcodedRFIDs;

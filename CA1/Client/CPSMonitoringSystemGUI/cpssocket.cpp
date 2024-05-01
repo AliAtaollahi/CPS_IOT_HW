@@ -44,6 +44,7 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
 void CPSSocket::collectingNewData() {
 
     QByteArray responseData = socket->readAll();
+    QTextStream(stdout) << responseData << Qt::endl;
     QJsonDocument jsonDocument = QJsonDocument::fromJson(responseData);
 
     if (!jsonDocument.isNull() && jsonDocument.isObject()) {
