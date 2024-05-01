@@ -1,12 +1,22 @@
 #include <Servo.h>
 #include <EtherCard.h>
+#include <LiquidCrystal.h>
 
 #define TIMEOUT_TIME 1000
-#define GREEN_LED 2
-#define RED_LED 3
+#define LEDS 2
 #define RX_PIN 0
 #define TX_PIN 1
-#define SERVO_PIN 4
+#define SERVO_PIN 3
+#define D4 6
+#define D5 7
+#define D6 8
+#define D7 9
+#define RS 5
+#define EN 4
+
+
+
+LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);
 
 Servo doorServo;
 
@@ -115,10 +125,12 @@ bool checkRFID(String tag) {
 
 
 void setup() {
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(RED_LED, OUTPUT);
+  pinMode(LEDS, OUTPUT);
   pinMode(RX_PIN, INPUT);
   pinMode(TX_PIN, OUTPUT);
+  pinMode(EN, OUTPUT);
+  lcd.begin(25,2);
+  //digitalWrite(EN, LOW);
   doorServo.attach(SERVO_PIN);
   doorServo.write(0);
   Serial.begin(9600);
@@ -155,13 +167,16 @@ void loop() {
     if (millis() - doorOpenTime >= 5000) {
       doorOpen = false;
       doorServo.write(0);
-      digitalWrite(GREEN_LED, LOW);
+      //digitalWrite(EN, LOW);
+      //lcd.clear();
+      //digitalWrite(LEDS, LOW);
       inputString = "";
     }
   }
 
     // If the receivedString has reached 10 characters
     if (inputString.length() == 10) {
+        lcd.clear();
         boolean sequenceResult = checkRFID(inputString);
 
       //boolean sequenceResult = checkSequence(inputString);
@@ -171,20 +186,27 @@ void loop() {
       Serial.println(sequenceResult ? "Correct" : "Incorrect");
       
       if (sequenceResult) {
-        digitalWrite(GREEN_LED, HIGH);
-        digitalWrite(RED_LED, LOW);
+        //digitalWrite(EN, HIGH);
+        lcd.print(inputString);
+        inputString = "";
+        //digitalWrite(EN, HIGH);
+        
+        digitalWrite(LEDS, HIGH);
         doorServo.write(90);
         doorOpen = true;
         doorOpenTime = millis(); // Record the time when the door was opened
       } else {
         // If the sequence is incorrect, close the door
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, HIGH);
+        //digitalWrite(EN, HIGH);
+        lcd.print("Access denied");
+        //digitalWrite(EN, HIGH);
+        
+        digitalWrite(LEDS, LOW);
         doorServo.write(0);
 		    //const char jsonPayload[] PROGMEM = "{\"message\":\"hello\"}";
 		    
         delay(500);
-        digitalWrite(RED_LED, LOW);
+        //digitalWrite(EN, LOW);
         doorOpen = false;
       }
       inputString = "";
