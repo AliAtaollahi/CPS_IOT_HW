@@ -29,7 +29,20 @@ This solution leverages Bluetooth's ability to identify devices over short dista
 ### Question 2: Is it possible to exchange necessary information (such as individual identifiers) between Bluetooth modules without needing to pair them? Explain.
 
 #### Answer:
+Yes, it is possible to exchange necessary information such as individual identifiers between Bluetooth modules without needing to pair them. This can be achieved using Bluetooth Low Energy (BLE) advertising and scanning capabilities. Here’s how it works:
 
+1. **BLE Advertising**:
+   - A Bluetooth device (such as a smartphone or a dedicated BLE beacon) broadcasts small packets of data called advertising packets. These packets can contain various types of information, including custom service data or the device’s unique identifier.
+   - Advertising does not require the broadcasting device to pair with receiving devices. It's a one-way communication where the broadcaster sends data out without knowing who the receivers are.
+
+2. **BLE Scanning**:
+   - Other Bluetooth devices can scan for these advertising packets without needing to establish a paired connection.
+   - When a device scans and picks up an advertising packet, it can extract the data embedded in the packet, such as a unique identifier or other predefined information.
+
+3. **Use Case in Entry Systems**:
+   - For an entry and exit management system, a Bluetooth module configured as a beacon can broadcast a unique identifier. Entry systems equipped with Bluetooth scanners can recognize these beacons and use the identifier to verify access permissions against a server.
+
+This method is particularly useful for applications where quick and seamless identification of devices is required without the overhead and user intervention required for Bluetooth pairing.
 
 ---
 ### Question 3: Assuming the use of Bluetooth, what alternative would you suggest to replace the use of a timer for closing a company's entrance? Explain.
