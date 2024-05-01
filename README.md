@@ -121,6 +121,7 @@ The embedded software for the IoT-based Entry and Exit Management System is desi
 #### Configuration
 
 ```cpp
+
 #define TIMEOUT_TIME 1000
 #define GREEN_LED 2
 #define RED_LED 3
@@ -153,6 +154,7 @@ String inputString = "";
 boolean doorOpen = false;
 unsigned long doorOpenTime = 0;
 Stash stash;
+
 ```
 Initializes the servo motor and sets up networking parameters including MAC address, IP addresses, and the remote server details.
 
@@ -178,7 +180,7 @@ void setup() {
 
   ether.clientWaitingGw();
   Serial.println("Gateway found");
-  sendHandshake();
+  while(!sendHandshake());
   Serial.println("Handshake completed");
 }
 ```
@@ -225,9 +227,7 @@ void loop() {
 
     // If the receivedString has reached 10 characters
     if (inputString.length() == 10) {
-        boolean sequenceResult = checkRFID(inputString);
-
-      //boolean sequenceResult = checkSequence(inputString);
+      boolean sequenceResult = checkRFID(inputString);
 
       Serial.println("  \n ");
       Serial.print("Sequence Check Result: ");
@@ -244,7 +244,6 @@ void loop() {
         digitalWrite(GREEN_LED, LOW);
         digitalWrite(RED_LED, HIGH);
         doorServo.write(0);
-		    //const char jsonPayload[] PROGMEM = "{\"message\":\"hello\"}";
 		    
         delay(500);
         digitalWrite(RED_LED, LOW);
@@ -358,30 +357,30 @@ bool sendHandshake() {
     ether.packetLoop(ether.packetReceive());
 
     // Flush the Ethernet buffer
-    while (ether.tcpReply(session) != 0) {
-      // Read and discard the data
       const char* reply = ether.tcpReply(session);
-    }
+      if(reply != 0)
+        return true;
   }
 
-  return true;
+  return false;
 }
 ```
-
 The sendHandshake function in our code is designed to establish an initial communication session between the Arduino-based system and a server. This handshake is critical as it sets up a preliminary connection with the server, reducing the overhead for subsequent RFID tag transmissions by ensuring the communication channel is open and responsive. Here’s a breakdown focusing on the core components and their purposes:
 
- **1. Packet Handling and Data Preparation**
-- **Packet Processing**: Begins by processing any packets that have been received to keep the Ethernet interface active.
-- **Stash Setup**: Utilizes the `Stash` class to create a temporary storage (stash) for the handshake message. This message is simply the string "Handshake".
-- **HTTP Request Preparation**: Constructs an HTTP POST request using the stored "Handshake" message. The request is formatted with headers specifying the host, content length, and content type. 
+**1. Packet Handling and Data Preparation**
+- **Packet Processing**: The function starts by receiving and processing packets to maintain an active Ethernet interface using `ether.packetReceive()` and `ether.packetLoop()`.
+- **Stash Setup**: A stash (temporary storage) is created using the `Stash` class, and the string "Handshake" is stored. This prepares the message for the upcoming HTTP request.
+- **HTTP Request Preparation**: Constructs an HTTP POST request. This request is formatted with headers that include the host, content length, and content type, alongside the "Handshake" message.
 
- **2. Sending the Request and Monitoring Response**
-- **Sending Request**: Initiates a TCP session using `ether.tcpSend()` to transmit the prepared HTTP request to the server.
-- **Response Handling**: Monitors for a server response over a fixed timeout period of 5 seconds. This loop ensures that the Arduino continues to process incoming packets during this wait period.
+**2. Sending the Request and Monitoring Response**
+- **Sending Request**: A TCP session is initiated with `ether.tcpSend()`, through which the prepared HTTP request is transmitted to the server.
+- **Response Handling**: The function then enters a loop that waits for a response within a 5-second timeout. During this period, it continuously processes incoming packets to ensure the Ethernet interface remains active.
 
- **3. Cleanup and Return**
-- **Buffer Flushing**: Continuously checks for a reply within the given timeout. If a reply is received, it reads and discards the data to clear the buffer.
-- **Function Exit**: The function returns `true` after the timeout period, regardless of whether a response was received or not. This implies that the handshake is considered complete after attempting to communicate, without verifying the success of the handshake explicitly.
+**3. Cleanup and Return**
+- **Buffer Flushing and Response Verification**: The function checks for a reply from the server using `ether.tcpReply(session)`. If a reply is detected (`reply != 0`), the function returns `true`, indicating a successful connection.
+- **Timeout Handling**: If no reply is received within the 5-second window, the function returns `false`, signifying that the handshake attempt was unsuccessful.
+
+
 
 ---
 ### Client Folder
