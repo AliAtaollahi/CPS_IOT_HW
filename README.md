@@ -288,7 +288,7 @@ void loop() {
   - **LEDs and Door**: Turns the GREEN LED off and the RED LED on, signaling access denied. Resets the door to a closed position by setting the servo to 0 degrees.
 - **String Reset**: Clears `inputString` to ready the system for the next RFID read cycle.
 - 
-### sendHandshake Function
+### getStatus Function
 The `getStatus` function is designed to extract a status code from a response string (reply) and store it in the status array.
 ```cpp
 void getStatus(char* reply, char* status) { 
@@ -673,132 +673,7 @@ This method retrieves the username, date, and time from the JSON object and emit
 ### Server Folder
 This folder contains all necessary files for setting up and running the server that manages communication between the IoT devices (Arduino boards) and the client applications. The server is designed to handle requests over HTTP from Arduino boards for RFID authentication and to communicate with client applications via WebSocket.
 
-#### `request.cpp` & `request.h`
-These files encapsulate the functionality required to handle incoming HTTP requests.  
-The `.h` file declares the structure of the `Request` class, which includes methods for initializing a request object, parsing the content, and retrieving specific elements like headers or the body.The `.cpp` file implements these methods, detailing how the server processes and extracts data from incoming HTTP requests, which is critical for actions like RFID verification or command execution.  
 
-**`.h` file:**
-```cpp
-#ifndef REQUEST_H
-#define REQUEST_H
-
-#include <QJsonObject>
-#include <QJsonDocument>
-
-class Request
-{
-public:
-    Request();
-    Request(const QString &type, const QVariant  &data);
-
-    QString getType() const;
-    void setType(const QString &type);
-
-    QVariant  getData() const;
-    void setData(const QVariant  &data);
-
-    QJsonObject toJson() const;
-    static Request fromJson(const QJsonObject &json);
-
-private:
-    QString type_;
-    QVariant  data_;
-};
-
-#endif // REQUEST_H
-```
-**`.cpp` file:**
-```cpp
-
-#include "request.h"
-
-Request::Request() {}
-
-
-Request::Request(const QString &type, const QVariant  &data) : type_(type), data_(data) {}
-
-QString Request::getType() const {
-    return type_;
-}
-
-void Request::setType(const QString &type) {
-    type_ = type;
-}
-
-QVariant  Request::getData() const {
-    return data_;
-}
-
-void Request::setData(const QVariant  &data) {
-    data_ = data;
-}
-
-QJsonObject Request::toJson() const {
-    return QJsonObject{{"type", type_}, {"data", QJsonValue::fromVariant(data_)}};
-}
-
-Request Request::fromJson(const QJsonObject &json) {
-    return Request(json["type"].toString(), json["data"].toVariant());
-}
-
-```
-
-#### `response.cpp` & `response.h`
-The `Response` class, declared in the `.h` file and implemented in the `.cpp` file, manages the server's output to clients. This includes generating the appropriate HTTP response based on the processing of the request. It allows the server to easily set status codes and craft response bodies, which are essential for notifying clients of the results of their requests, whether they are accessing resources or executing commands.  
-
-**`.h` file:**
-```cpp
-#ifndef RESPONSE_H
-#define RESPONSE_H
-
-#include <QJsonObject>
-#include <QJsonDocument>
-
-class Response
-{
-public:
-    Response();
-    Response(const QVariant &data);
-
-    QVariant getData() const;
-    void setData(const QVariant &data);
-
-    QJsonObject toJson() const;
-    static Response fromJson(const QJsonObject &json);
-
-private:
-    QVariant data_;
-};
-
-#endif // RESPONSE_H
-```
-**`.cpp` file:**
-```cpp
-#include "response.h"
-
-Response::Response() {}
-
-Response::Response(const QVariant &data) : data_(data) {}
-
-QVariant Response::getData() const {
-    return data_;
-}
-
-void Response::setData(const QVariant &data) {
-    data_ = data;
-}
-
-QJsonObject Response::toJson() const {
-    QJsonObject json;
-    json["data"] = data_.toJsonObject();
-    return json;
-}
-
-Response Response::fromJson(const QJsonObject &json) {
-    return Response(QVariant::fromValue(json["data"]));
-}
-
-```
 
 
 #### `customizedhttpserver.cpp` & `customizedhttpserver.h`
@@ -828,12 +703,11 @@ public:
     bool startServer(int port);
 
 signals:
-    void resultRfidCheck(bool isMatch, const QDateTime &currentTime, const QString &rfid);
-
-private slots:
-    QHttpServerResponse handleRequest(const QHttpServerRequest &request);
+    void resultRfidCheck(bool isMatch, const QString &rfid);
+    void resultRfidCheckHistory(bool isMatch, const QString Date, const QString &currentTime, const QString &rfid);
 
 private:
+    QHttpServerResponse handleRequest(const QHttpServerRequest &request);
     QHttpServer* httpServer_;
     EmployeesDatabase employeesDatabase_;
 };
@@ -844,6 +718,9 @@ private:
 
 - **Constructor (`CustomizedHttpServer`)**: Sets up the employees database and configures the HTTP server to route `/rfid` POST requests through a designated handler that processes RFID data for authentication.
 ```cpp
+// customizedhttpserver.cpp
+#include "customizedhttpserver.h"
+
 CustomizedHttpServer::CustomizedHttpServer(int port, const QString &initialDataPath, QObject *parent) :
     QObject(parent), employeesDatabase_(EmployeesDatabase(initialDataPath)), httpServer_(new QHttpServer())
 {
@@ -870,10 +747,20 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
     QByteArray requestData = request.body();
     QString rfid = requestData;
 
-    bool isAuthorized = employeesDatabase_.handleRfidReceived(rfid);
+    QDateTime currentDateTime = QDateTime::currentDateTime();
 
-    QDateTime currentTime = QDateTime::currentDateTime();
-    emit resultRfidCheck(isAuthorized, currentTime, rfid);
+    // Extract date and time separately
+    QDate currentDate = currentDateTime.date();
+    QTime currentTime = currentDateTime.time();
+
+    // Convert date and time to strings
+    QString dateString = currentDate.toString("yyyy-MM-dd");
+    QString timeString = currentTime.toString("HH:mm:ss");
+
+    bool isAuthorized = employeesDatabase_.checkRFIDMatch(rfid);
+
+    emit resultRfidCheck(isAuthorized, rfid);
+    emit resultRfidCheckHistory(isAuthorized, dateString, timeString, rfid);
 
     QByteArray result;
     QHttpServerResponse::StatusCode statusCode;
@@ -889,26 +776,11 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
     return QHttpServerResponse(result, statusCode);
 }
 ```
-This setup ensures robust handling of access control requests, providing secure and efficient authentication management tailored to the needs of the IoT system. T
+This setup ensures robust handling of access control requests, providing secure and efficient authentication management tailored to the needs of the IoT system.
 
 #### `employee.cpp` & `employee.h`
 These files define and implement the Employee class, responsible for encapsulating employee-related data within the system.
 **`.h` file:**  
-```cpp
-#include "employee.h"
-
-Employee::Employee() {
-    rfidTag_ = nullptr;
-}
-
-Employee::Employee(const QString &rfidTag) : rfidTag_(rfidTag) {};
-
-bool Employee::checkRFIDTagMatched(const QString &rfidTag) const{
-    return rfidTag_ == rfidTag;
-}
-```
-**`.cpp` file:**
-These class provides a straightforward implementation suited for systems where RFID is the primary identifier for employees.
 ```cpp
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
@@ -927,6 +799,21 @@ private:
 };
 
 #endif // EMPLOYEE_H
+```
+**`.cpp` file:**
+These class provides a straightforward implementation suited for systems where RFID is the primary identifier for employees.
+```cpp
+#include "employee.h"
+
+Employee::Employee() {
+    rfidTag_ = nullptr;
+}
+
+Employee::Employee(const QString &rfidTag) : rfidTag_(rfidTag) {};
+
+bool Employee::checkRFIDTagMatched(const QString &rfidTag) const{
+    return rfidTag_ == rfidTag;
+}
 ```
 
 #### `employeesdatabase.cpp` & `employeesdatabase.h`  
@@ -948,15 +835,18 @@ public:
     explicit EmployeesDatabase(const QString &initialDataPath, QObject *parent = nullptr);
 
     const QVector<Employee>& getEmployeesVector() const;
-    bool handleRfidReceived(const QString &rfid);
+    bool checkRFIDMatch(const QString &rfid);
 
 private:
     QVector<Employee> employeesVector_;
 
-    void readEmployeesFromJson(const QString &path);
+    void loadEmployeesFromJson(const QString &path);
+    void parseEmployeesJson(const QByteArray &jsonData);
+    QByteArray readJsonFile(const QString &path);
 };
 
 #endif // EMPLOYEESDATABASE_H
+
 ```
 **`.cpp` file:**
 
@@ -964,7 +854,7 @@ private:
 ```cpp
 EmployeesDatabase::EmployeesDatabase(const QString &initialDataPath, QObject *parent) : QObject(parent)
 {
-    readEmployeesFromJson(initialDataPath);
+    loadEmployeesFromJson(initialDataPath);
 }
 ```
 - **`getEmployeesVector`**: Grants read-only access to the vector of employees, useful for operations requiring data on all employees.
@@ -974,29 +864,47 @@ const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
     return employeesVector_;
 }
 ```
-- **`readEmployeesFromJson`**: Parses employee data from a JSON file, creating employee records for each valid entry. This method ensures the database is populated with current and accurate information from the specified file.
+
+- **`loadEmployeesFromJson`**:
 ```cpp
-void EmployeesDatabase::readEmployeesFromJson(const QString &path)
+void EmployeesDatabase::loadEmployeesFromJson(const QString &path)
+{
+    QByteArray jsonData = readJsonFile(path);
+    if (!jsonData.isEmpty()) {
+        parseEmployeesJson(jsonData);
+    }
+}
+```
+- **`readJsonFile`**:
+```cpp
+QByteArray EmployeesDatabase::readJsonFile(const QString &path)
 {
     QFile file(path);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Failed to open " + path;
-        return;
+        return QByteArray();
     }
 
     QByteArray jsonData = file.readAll();
     file.close();
 
+    return jsonData;
+}
+```
+- **`readJsonFile`**:
+```cpp
+void EmployeesDatabase::parseEmployeesJson(const QByteArray &jsonData)
+{
     QJsonDocument doc = QJsonDocument::fromJson(jsonData);
     if (!doc.isArray()) {
-        qDebug() << "Invalid JSON format in " + path;
+        qDebug() << "Invalid JSON format";
         return;
     }
 
     QJsonArray employeesArray = doc.array();
     for (const QJsonValue& employeeValue : employeesArray) {
         if (!employeeValue.isObject()) {
-            qDebug() << "Invalid employee data in " + path;
+            qDebug() << "Invalid employee data";
             continue;
         }
 
@@ -1008,9 +916,10 @@ void EmployeesDatabase::readEmployeesFromJson(const QString &path)
     }
 }
 ```
-- **`handleRfidReceived`**: Verifies a received RFID tag against the database, returning a boolean to indicate whether the tag is authorized, critical for implementing effective access controls in security-sensitive environments.
+- **`checkRFIDMatch`**:
 ```cpp
-bool EmployeesDatabase::handleRfidReceived(const QString &rfid) {
+bool EmployeesDatabase::checkRFIDMatch(const QString &rfid)
+{
     bool isMatch = false;
     for (const Employee &employee : employeesVector_) {
         if (employee.checkRFIDTagMatched(rfid)) {
@@ -1022,38 +931,436 @@ bool EmployeesDatabase::handleRfidReceived(const QString &rfid) {
     return isMatch;
 }
 ```
-This class is a foundational component of the system's security infrastructure, handling the crucial task of RFID-based employee authentication.
+#### `authenticator.cpp` & `authenticator.h`
+**`.h` file:**  
+```cpp
+#ifndef AUTHENTICATOR_H
+#define AUTHENTICATOR_H
+
+#include <QObject>
+#include <QString>
+#include <QTcpSocket>
+
+class Authenticator : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Authenticator(QObject *parent = nullptr);
+
+    void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
+
+private:
+    bool isValidUser(const QString &username, const QString &password);
+};
+
+#endif // AUTHENTICATOR_H
+```
+
+
+**`.cpp` file:**
+```cpp
+#include "authenticator.h"
+#include <QDebug>
+
+Authenticator::Authenticator(QObject *parent) : QObject(parent)
+{
+}
+
+void Authenticator::authenticateUser(const QByteArray &data, QTcpSocket *clientSocket)
+{
+    QList<QByteArray> parts = data.split(':');
+
+    if (parts.size() >= 2) {
+        QString username = QString::fromUtf8(parts[0]);
+        QString password = QString::fromUtf8(parts[1]);
+        bool isValid = isValidUser(username, password);
+        if (isValid) {
+            clientSocket->write("1");
+            qDebug() << "Access granted for:" << username;
+        } else {
+            qDebug() << "Access denied for:" << username;
+            clientSocket->write("0");
+            clientSocket->close();
+        }
+        qDebug() << "Username:" << username << "Password:" << password;
+    } else {
+        qDebug() << "Invalid message format";
+    }
+}
+
+bool Authenticator::isValidUser(const QString &username, const QString &password)
+{
+    return (username == "test" && password == "1234");
+}
+```
+
+#### `loginhistory.cpp` & `loginhistory.h`
+**`.h` file:**  
+```cpp
+#ifndef LOGINHISTORY_H
+#define LOGINHISTORY_H
+
+#include <QObject>
+#include <QDateTime>
+#include <QString>
+
+
+class LoginHistory
+{
+public:
+    LoginHistory();
+    LoginHistory(QString username, QString date, QString time, bool permited = false);
+
+    QString getUsername() const;
+    QString getDate() const;
+    QString getTime() const;
+    bool isPermitted() const;
+
+private:
+    QString username_;
+    QString date_;
+    QString time_;
+    bool permited_;
+};
+
+#endif // LOGINHISTORY_H
+```
+**`.cpp` file:**
+```cpp
+#include "loginhistory.h"
+
+LoginHistory::LoginHistory() {}
+
+LoginHistory::LoginHistory(QString username, QString date, QString time, bool permited)
+    : username_(username), date_(date), time_(time), permited_(permited){}
+
+QString LoginHistory::getUsername() const
+{
+    return username_;
+}
+
+QString LoginHistory::getTime() const
+{
+    return time_;
+};
+
+QString LoginHistory::getDate() const
+{
+    return date_;
+};
+
+bool LoginHistory::isPermitted() const
+{
+    return permited_;
+};
+```
+#### `loginhistorydatabase.cpp` & `loginhistorydatabase.h`
+**`.h` file:**  
+```cpp
+#ifndef LOGINHISTORYDATABASE_H
+#define LOGINHISTORYDATABASE_H
+
+#include <QObject>
+#include <QVector>
+#include "loginhistory.h"
+
+class LoginHistoryDatabase : public QObject
+{
+    Q_OBJECT
+public:
+    explicit LoginHistoryDatabase(const QString &initialDataPath, QObject *parent = nullptr);
+
+    const QVector<LoginHistory>& getLoginHistoriesVector() const;
+
+signals:
+    void loginHistoryResult(const QVector<LoginHistory> &history);
+
+public slots:
+    void handleRequestLoginHistory();
+    void addLoginHistory(bool isMatch, const QString &date, const QString &time, const QString &rfid);
+
+private:
+    QVector<LoginHistory> loginHistoryVector_;
+
+    void readLoginHistoriesFromJson(const QString &path);
+    QVector<LoginHistory> parseLoginHistories(const QByteArray &jsonData);
+    LoginHistory parseLoginHistory(const QJsonObject &loginHistoryObject);
+};
+
+#endif // LOGINHISTORYDATABASE_H
+```
+**`.cpp` file:**
+```cpp
+#include "loginhistorydatabase.h"
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+
+LoginHistoryDatabase::LoginHistoryDatabase(const QString &initialDataPath, QObject *parent)
+    : QObject(parent)
+{
+    readLoginHistoriesFromJson(initialDataPath);
+}
+
+const QVector<LoginHistory>& LoginHistoryDatabase::getLoginHistoriesVector() const
+{
+    return loginHistoryVector_;
+}
+
+void LoginHistoryDatabase::readLoginHistoriesFromJson(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open " + path;
+        return;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    loginHistoryVector_ = parseLoginHistories(jsonData);
+}
+
+QVector<LoginHistory> LoginHistoryDatabase::parseLoginHistories(const QByteArray &jsonData)
+{
+    QVector<LoginHistory> histories;
+
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    if (!doc.isArray()) {
+        qDebug() << "Invalid JSON format";
+        return histories;
+    }
+
+    QJsonArray loginHistoryArray = doc.array();
+    for (const QJsonValue& loginHistoryValue : loginHistoryArray) {
+        if (!loginHistoryValue.isObject()) {
+            qDebug() << "Invalid loginHistory data";
+            continue;
+        }
+
+        QJsonObject loginHistoryObject = loginHistoryValue.toObject();
+        LoginHistory loginHistory = parseLoginHistory(loginHistoryObject);
+        histories.append(loginHistory);
+    }
+
+    return histories;
+}
+
+LoginHistory LoginHistoryDatabase::parseLoginHistory(const QJsonObject &loginHistoryObject)
+{
+    QString username = loginHistoryObject["username"].toString();
+    QString date = loginHistoryObject["date"].toString();
+    QString time = loginHistoryObject["time"].toString();
+    bool permitted = loginHistoryObject["permited_"].toBool();
+
+    return LoginHistory(username, date, time, permitted);
+}
+
+void LoginHistoryDatabase::handleRequestLoginHistory()
+{
+    emit loginHistoryResult(loginHistoryVector_);
+}
+
+void LoginHistoryDatabase::addLoginHistory(bool isMatch, const QString &date, const QString &time, const QString &rfid)
+{
+    LoginHistory newHistory(rfid, date, time, isMatch);
+    loginHistoryVector_.append(newHistory);
+    qDebug() << "New history added: " << newHistory.getUsername() << " " << newHistory.getTime() << " " << newHistory.isPermitted();
+}
+```
+
+#### `socketserver.cpp` & `socketserver.h`
+**`.h` file:**  
+```cpp
+#ifndef SOCKETSERVER_H
+#define SOCKETSERVER_H
+
+#include "loginhistory.h"
+
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QDebug>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QDateTime>
+
+#include "authenticator.h"
+
+class SocketServer : public QTcpServer {
+    Q_OBJECT
+
+public:
+    SocketServer(QObject *parent = nullptr);
+
+protected:
+    void incomingConnection(qintptr socketDescriptor) override;
+    bool isValidRFID(const QString &rfid);
+    void processData(QByteArray &data, QTcpSocket *clientSocket);
+    //bool isValidUser(const QString &username, const QString &password);
+    QByteArray retrieveHistoryData();
+   // void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
+
+signals:
+    void requestLoginHistory();
+
+public slots:
+    void sendNewUserDataToAdmin(bool isMatch, const QString &rfid);
+    void SendLoginHistoryResult(const QVector<LoginHistory> &loginHistories);
+
+private:
+    QStringList hardcodedRFIDs;
+    QTcpSocket* clientSocketpointer; // Store pointer to client socket
+    Authenticator authenticator;
+};
+
+#endif // SOCKETSERVER_H
+```
+**`.cpp` file:**
+```cpp
+#include "socketserver.h"
+
+SocketServer::SocketServer(QObject *parent) : QTcpServer(parent) {
+    hardcodedRFIDs << "RFID1" << "RFID2" << "RFID3";
+}
+
+void SocketServer::incomingConnection(qintptr socketDescriptor) {
+    QTcpSocket *clientSocket = new QTcpSocket(this);
+    if (!clientSocket->setSocketDescriptor(socketDescriptor)) {
+        qDebug() << "Error setting socket descriptor";
+        return;
+    }
+
+    qDebug() << "New connection from:" << clientSocket->peerAddress().toString();
+
+    connect(clientSocket, &QTcpSocket::readyRead, this, [this, clientSocket]() {
+
+        QByteArray data = clientSocket->readAll();
+        qDebug() << "Received:" << data;
+        processData(data, clientSocket);
+        clientSocketpointer = clientSocket;
+
+    });
+
+    connect(clientSocket, &QTcpSocket::disconnected, this, [clientSocket]() {
+        qDebug() << "Connection closed for:" << clientSocket->peerAddress().toString();
+        clientSocket->deleteLater();
+    });
+}
+
+bool SocketServer::isValidRFID(const QString &rfid) {
+    return hardcodedRFIDs.contains(rfid);
+}
+
+void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
+    qDebug() << "in  SocketServer::processData";
+    if(data == "historyRequest"){
+        emit requestLoginHistory();
+    }
+    else{
+        //authenticateUser(data, clientSocket);
+        authenticator.authenticateUser(data, clientSocket);
+    }
+}
+
+
+void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
+
+    QDateTime currentDateTime = QDateTime::currentDateTime();
+
+    QDate currentDate = currentDateTime.date();
+    QTime currentTime = currentDateTime.time();
+
+    QString dateString = currentDate.toString("yyyy-MM-dd");
+    QString timeString = currentTime.toString("HH:mm:ss");
+
+    QJsonObject messageObj;
+    messageObj["type"] = "user";
+    messageObj["username"] = rfid;
+    messageObj["date"] = dateString;
+    messageObj["time"] = timeString;
+
+    QJsonDocument jsonDocument(messageObj);
+
+    QByteArray jsonData = jsonDocument.toJson();
+
+    qint64 bytesWritten = clientSocketpointer->write(jsonData);
+
+    if (bytesWritten == -1) {
+        qDebug() << "Failed to write data to socket:" << clientSocketpointer->errorString();
+    } else {
+        qDebug() << "WebSocket message sent to client:" << jsonData;
+    }
+}
+
+
+void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHistories){
+    if (this->clientSocketpointer) {
+        QJsonArray dataArray;
+
+        for (const LoginHistory &entry : loginHistories) {
+            QJsonObject obj;
+            obj["username"] = entry.getUsername();
+            obj["date"] = entry.getDate();
+            obj["time"] = entry.getTime();
+            obj["permitted"] = entry.isPermitted();
+            dataArray.append(obj);
+        }
+        QJsonObject mainObj;
+        mainObj["type"] = "history";
+        mainObj["data"] = dataArray;
+
+        // Convert the main JSON object to a JSON document
+        QJsonDocument jsonDocument(mainObj);
+
+        // Convert the JSON document to a QByteArray
+        QByteArray jsonData = jsonDocument.toJson();
+        clientSocketpointer->write(jsonData);
+    }
+}
+``
 
 #### `main.cpp`
 The `main` function of the application serves as the entry point, initializing and running the HTTP server that forms the core of the system's network interactions.
-
-- **Configuration**:
-  - **Files**: Configures paths to crucial data files (`employees.json`, `admins.json`, `history.json`), ensuring the server has access to essential data for operations.
 ```cpp
+#include <QCoreApplication>
+#include "loginhistorydatabase.h"
+#include "socketserver.h"
+#include "customizedhttpserver.h"
+
 const QString USERS_FILE_PATH = "../../data/employees.json";
 const QString ADMINS_FILE_PATH = "../../data/admins.json";
 const QString HISTORY_FILE_PATH = "../../data/history.json";
-```
-  - **Port**: Sets the server to listen on HTTP standard port 80, facilitating easy access via standard web protocols.
-```cpp
 const int HTTP_SERVER_PORT = 80;
-```
-- **Execution**:
-```cpp
-int main(int argc, char *argv[])
-{
-    QCoreApplication app(argc, argv);
+const int WEB_SOCKET_PORT = 5050;
+
+int main(int argc, char *argv[]) {
+    QCoreApplication a(argc, argv);
 
     CustomizedHttpServer customizedHttpServer = CustomizedHttpServer(HTTP_SERVER_PORT, USERS_FILE_PATH);
-    
+    qDebug() << "Server running on port " << HTTP_SERVER_PORT;
 
-    qInfo("Server running on port 80");
-    return app.exec();
+    SocketServer server;
+    if (!server.listen(QHostAddress::LocalHost, WEB_SOCKET_PORT)) {
+        qDebug() << "Server could not start!";
+        return 1;
+    }
+    qDebug() << "Server started on port" << server.serverPort();
+
+    LoginHistoryDatabase loginHistoryDatabase(HISTORY_FILE_PATH);
+
+    QObject::connect(&customizedHttpServer, &CustomizedHttpServer::resultRfidCheck, &server, &SocketServer::sendNewUserDataToAdmin);
+    QObject::connect(&customizedHttpServer, &CustomizedHttpServer::resultRfidCheckHistory, &loginHistoryDatabase, &LoginHistoryDatabase::addLoginHistory);
+
+    QObject::connect(&server, &SocketServer::requestLoginHistory, &loginHistoryDatabase, &LoginHistoryDatabase::handleRequestLoginHistory);
+    QObject::connect(&loginHistoryDatabase, &LoginHistoryDatabase::loginHistoryResult, &server, &SocketServer::SendLoginHistoryResult);
+
+    return a.exec();
 }
 ```
-  - **Server Initialization**: A `CustomizedHttpServer` instance is created and started with predefined settings, including the port and user data file path.
-  - **Running State Notification**: Outputs a log message to confirm the server's operational status, helping in diagnostics and monitoring.
-  - **Event Loop**: Enters the Qt event loop, which is crucial for processing incoming network requests and internal events, maintaining the server's responsiveness.
+
+
 
 This setup demonstrates a straightforward, robust server initialization and execution strategy, leveraging Qt's capabilities for effective network communication and event handling within a server environment.
 
