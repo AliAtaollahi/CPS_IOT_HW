@@ -88,19 +88,19 @@ This folder holds simulation files for Proteus software, allowing us to simulate
 
 #### Screenshots (imulation in Proteus)
 1. "Starting and Waiting for Handshake"
-![Screenshot 1 - Starting and Waiting for Handshake](CA1/Pics/screenshot(SimulationInProteus)/1.jpg)
+![Screenshot 1 - Starting and Waiting for Handshake](CA1/Pics/screenshot(SimulationInProteus)/1.png)
 *Description: This screenshot captures the initial state of the system where the Arduino board is powered on and waiting to establish a connection with the cloud server. The system is in standby mode.*
 
 2. "Handshake is Done"
-![Screenshot 2 - Handshake is Done](CA1/Pics/screenshot(SimulationInProteus)/2.jpg)
+![Screenshot 2 - Handshake is Done](CA1/Pics/screenshot(SimulationInProteus)/2.png)
 *Description: This screenshot shows the system after successfully establishing a connection with the cloud server. The monitor shows that the handshake process is complete, and the system is ready to receive RFID authentication requests.*
 
 3. "Input a Correct RFID -> Open Door and Green LED"
-![Screenshot 3 - Input a Correct RFID](CA1/Pics/screenshot(SimulationInProteus)/3.jpg)
+![Screenshot 3 - Input a Correct RFID](CA1/Pics/screenshot(SimulationInProteus)/3.png)
 *Description: In this screenshot, a correct RFID tag is presented to the system for authentication. The Arduino board processes the RFID data, communicates with the cloud server for authentication, and receives a positive response. As a result, the servo motor opens the door, and the green LED lights up, indicating access granted.*
 
 4. "Input an Incorrect RFID -> Close Door and Red LED"
-![Screenshot 4 - Input an Incorrect RFID](CA1/Pics/screenshot(SimulationInProteus)/4.jpg)
+![Screenshot 4 - Input an Incorrect RFID](CA1/Pics/screenshot(SimulationInProteus)/4.png)
 * This screenshot depicts the scenario where an incorrect RFID tag is presented for authentication. The Arduino board sends the RFID data to the cloud server, but authentication fails. Consequently, the servo motor keeps the door closed. The red LED, which is normally on to indicate a secure state, remains lit, signaling that access is denied.*
 
 5. "Sequential RFID Authentication - Open Door, Then Close for Second Person"
