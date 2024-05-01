@@ -1,0 +1,9 @@
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/Http.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/Http_autogen_timestamp_deps.dir
+D:/8/CPS/CAs-HWs/CPS_IOT_HW/CA1/Http/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/Http_autogen.dir
