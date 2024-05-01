@@ -680,6 +680,7 @@ This folder contains all necessary files for setting up and running the server t
 These files together define and implement a custom HTTP server tailored for our IoT system. The header file declares the server class and necessary methods, while the implementation file details how the server handles HTTP requests and responses.
 
 **`.h` file:**
+Defines the `CustomizedHttpServer` class, which manages the HTTP server interactions, including starting the server and handling requests for RFID authentication.  
 
 ```cpp
 #ifndef CUSTOMIZEDHTTPSERVER_H
@@ -778,9 +779,10 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
 }
 ```
 
-#### `employee.cpp` & `employee.h`
-These files define and implement the Employee class, responsible for encapsulating employee-related data within the system.
+#### `employee.cpp` & `employee.h`  
 **`.h` file:**  
+Declares the `Employee` class that stores employee details and provides a method to check if an RFID tag matches the stored employee RFID tag.  
+
 ```cpp
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
@@ -801,7 +803,10 @@ private:
 #endif // EMPLOYEE_H
 ```
 **`.cpp` file:**
-These class provides a straightforward implementation suited for systems where RFID is the primary identifier for employees.
+Implements the `Employee` class functionalities:
+- **Constructors** initialize an employee with or without an RFID tag.
+- **RFID Check** verifies if a provided RFID matches the employee’s stored RFID, essential for access control validation.
+
 ```cpp
 #include "employee.h"
 
@@ -817,9 +822,9 @@ bool Employee::checkRFIDTagMatched(const QString &rfidTag) const{
 ```
 
 #### `employeesdatabase.cpp` & `employeesdatabase.h`  
-These files encompass the `EmployeesDatabase` class, The `EmployeesDatabase` class manages a collection of employees, specifically their RFID tags, to facilitate access control within the system. It loads employee data from a JSON file at initialization and provides methods to verify RFID tags against this data.
 
 **`.h` file:**  
+Declares the `EmployeesDatabase` class which manages a collection of `Employee` objects. It includes methods for loading employee data from JSON and checking RFID tags against stored records.  
 ```cpp
 #ifndef EMPLOYEESDATABASE_H
 #define EMPLOYEESDATABASE_H
@@ -848,25 +853,29 @@ private:
 #endif // EMPLOYEESDATABASE_H
 
 ```
-**`.cpp` file:**
+**`.cpp` file:**  
+mplements the database functionalities:
+- **Loading Data** from a JSON file into the database upon initialization.
+- **RFID Match Checking** against the database to validate access requests.
+- **File Reading and JSON Parsing** methods facilitate the loading and parsing of employee data from a specified JSON file format.
 
-- **Constructor (`EmployeesDatabase`)**: Loads employee data from a JSON file specified by the path provided, initializing the database with the necessary employee information for immediate use.
 ```cpp
+#include "employeesdatabase.h"
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 EmployeesDatabase::EmployeesDatabase(const QString &initialDataPath, QObject *parent) : QObject(parent)
 {
     loadEmployeesFromJson(initialDataPath);
 }
-```
-- **`getEmployeesVector`**: Grants read-only access to the vector of employees, useful for operations requiring data on all employees.
-```cpp
+
 const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
 {
     return employeesVector_;
 }
-```
 
-- **`loadEmployeesFromJson`**:
-```cpp
 void EmployeesDatabase::loadEmployeesFromJson(const QString &path)
 {
     QByteArray jsonData = readJsonFile(path);
@@ -874,9 +883,7 @@ void EmployeesDatabase::loadEmployeesFromJson(const QString &path)
         parseEmployeesJson(jsonData);
     }
 }
-```
-- **`readJsonFile`**:
-```cpp
+
 QByteArray EmployeesDatabase::readJsonFile(const QString &path)
 {
     QFile file(path);
@@ -890,9 +897,7 @@ QByteArray EmployeesDatabase::readJsonFile(const QString &path)
 
     return jsonData;
 }
-```
-- **`readJsonFile`**:
-```cpp
+
 void EmployeesDatabase::parseEmployeesJson(const QByteArray &jsonData)
 {
     QJsonDocument doc = QJsonDocument::fromJson(jsonData);
@@ -915,9 +920,7 @@ void EmployeesDatabase::parseEmployeesJson(const QByteArray &jsonData)
         employeesVector_.append(employee);
     }
 }
-```
-- **`checkRFIDMatch`**:
-```cpp
+
 bool EmployeesDatabase::checkRFIDMatch(const QString &rfid)
 {
     bool isMatch = false;
@@ -931,8 +934,10 @@ bool EmployeesDatabase::checkRFIDMatch(const QString &rfid)
     return isMatch;
 }
 ```
+
 #### `authenticator.cpp` & `authenticator.h`
 **`.h` file:**  
+Defines the `Authenticator` class that provides user authentication services by verifying username and password combinations.
 ```cpp
 #ifndef AUTHENTICATOR_H
 #define AUTHENTICATOR_H
@@ -958,6 +963,11 @@ private:
 
 
 **`.cpp` file:**
+Implements user authentication by:
+- **Splitting Received Data** to extract username and password.
+- **Validating Credentials** against predefined values or a database.
+- **Handling Authentication Results** by sending appropriate signals or messages back to the client.
+  
 ```cpp
 #include "authenticator.h"
 #include <QDebug>
@@ -996,6 +1006,8 @@ bool Authenticator::isValidUser(const QString &username, const QString &password
 
 #### `loginhistory.cpp` & `loginhistory.h`
 **`.h` file:**  
+Describes the `LoginHistory` class that records login attempts, including the username, date, time, and whether the attempt was permitted.  
+
 ```cpp
 #ifndef LOGINHISTORY_H
 #define LOGINHISTORY_H
@@ -1026,6 +1038,9 @@ private:
 #endif // LOGINHISTORY_H
 ```
 **`.cpp` file:**
+Implements functionalities to:
+- **Store and Retrieve Login History** details which are critical for audit trails and security monitoring.  
+
 ```cpp
 #include "loginhistory.h"
 
@@ -1055,7 +1070,9 @@ bool LoginHistory::isPermitted() const
 };
 ```
 #### `loginhistorydatabase.cpp` & `loginhistorydatabase.h`
-**`.h` file:**  
+**`.h` file:**    
+Declares the `LoginHistoryDatabase` class for managing a collection of `LoginHistory` entries, offering methods to add new entries and fetch the login history.  
+
 ```cpp
 #ifndef LOGINHISTORYDATABASE_H
 #define LOGINHISTORYDATABASE_H
@@ -1089,7 +1106,12 @@ private:
 
 #endif // LOGINHISTORYDATABASE_H
 ```
+
 **`.cpp` file:**
+- **Manages Login Histories** by loading historical data from a file and providing functionality to add new history records and emit results for requests.
+- **JSON Parsing** to convert stored data into `LoginHistory` objects and manage them in a vector for easy access and manipulation.
+- 
+
 ```cpp
 #include "loginhistorydatabase.h"
 #include <QFile>
@@ -1172,6 +1194,8 @@ void LoginHistoryDatabase::addLoginHistory(bool isMatch, const QString &date, co
 
 #### `socketserver.cpp` & `socketserver.h`
 **`.h` file:**  
+Defines the `SocketServer` class, a TCP server for handling real-time communication with clients, including sending commands and receiving data.
+
 ```cpp
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
@@ -1218,13 +1242,26 @@ private:
 #endif // SOCKETSERVER_H
 ```
 **`.cpp` file:**
+- **Handles Incoming Connections** and routes data to appropriate handlers, depending on the command type (e.g., authentication request, history request).
+- **Data Processing** for different types of client requests and managing ongoing client connections.  
+
+Here's a breakdown of the `SocketServer` class implementation, describing each part in detail:
+
+### Class Initialization
+
 ```cpp
 #include "socketserver.h"
 
 SocketServer::SocketServer(QObject *parent) : QTcpServer(parent) {
     hardcodedRFIDs << "RFID1" << "RFID2" << "RFID3";
 }
+```
 
+- The constructor initializes the `SocketServer` with a list of hardcoded RFID tags. These are presumably for demonstration or testing purposes, representing valid RFID tags that the system recognizes.
+
+### Handling Incoming Connections
+
+```cpp
 void SocketServer::incomingConnection(qintptr socketDescriptor) {
     QTcpSocket *clientSocket = new QTcpSocket(this);
     if (!clientSocket->setSocketDescriptor(socketDescriptor)) {
@@ -1249,10 +1286,25 @@ void SocketServer::incomingConnection(qintptr socketDescriptor) {
     });
 }
 
+```
+
+- This method handles new incoming TCP connections. It attempts to set the socket descriptor for the new connection. If successful, it logs the connection and sets up handlers for when data is ready to be read and when the connection is disconnected.
+- `readyRead` signal is connected to a lambda function that reads all available data, processes it, and stores a pointer to the client socket for later use.
+- `disconnected` signal ensures the client socket is properly cleaned up after disconnection.
+
+### RFID Validation
+
+```cpp
 bool SocketServer::isValidRFID(const QString &rfid) {
     return hardcodedRFIDs.contains(rfid);
 }
+```
 
+- A simple method to check if a provided RFID tag is in the list of hardcoded valid RFIDs. This is used to quickly verify if an RFID tag is known to the system.
+
+### Processing Data
+
+```cpp
 void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
     qDebug() << "in  SocketServer::processData";
     if(data == "historyRequest"){
@@ -1263,8 +1315,13 @@ void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
         authenticator.authenticateUser(data, clientSocket);
     }
 }
+```
 
+- Processes incoming data from client sockets. If the data corresponds to a "historyRequest," it triggers an event to send login history data back to the client. Otherwise, it passes the data to the `Authenticator` for user authentication.
 
+### Sending New User Data
+
+```cpp
 void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
 
     QDateTime currentDateTime = QDateTime::currentDateTime();
@@ -1294,7 +1351,13 @@ void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
     }
 }
 
+```
 
+- This method sends a JSON message containing new or updated user data (like RFID tag scans) to the admin client. It constructs a JSON object with the RFID, the current date, and time, then sends it over the client socket. The method logs whether the data was successfully sent or if there was an error.
+
+### Sending Login History Results
+
+```cpp
 void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHistories){
     if (this->clientSocketpointer) {
         QJsonArray dataArray;
@@ -1321,8 +1384,16 @@ void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHist
 }
 ```
 
+:**
+- Sends a batch of login history records to a client. Constructs a JSON array containing details from each `LoginHistory` object and sends it through the stored client socket. This is particularly useful for audit logs and security monitoring where historical data access is needed.
+
+Each method is designed to handle specific tasks efficiently within the network communication framework, ensuring the system's responsiveness and reliability.
+
+
+
 #### `main.cpp`
-The `main` function of the application serves as the entry point, initializing and running the HTTP server that forms the core of the system's network interactions.
+- This is the entry point of the server application, where all components are initialized, and servers start listening on their respective ports. Connections between different components (like signals and slots in Qt) are also set up here to ensure the entire server system functions as a cohesive unit.
+
 ```cpp
 #include <QCoreApplication>
 #include "loginhistorydatabase.h"
