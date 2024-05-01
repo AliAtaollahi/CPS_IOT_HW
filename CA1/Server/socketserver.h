@@ -11,6 +11,8 @@
 #include <QJsonObject>
 #include <QDateTime>
 
+#include "authenticator.h"
+
 class SocketServer : public QTcpServer {
     Q_OBJECT
 
@@ -21,9 +23,9 @@ protected:
     void incomingConnection(qintptr socketDescriptor) override;
     bool isValidRFID(const QString &rfid);
     void processData(QByteArray &data, QTcpSocket *clientSocket);
-    bool isValidUser(const QString &username, const QString &password);
+    //bool isValidUser(const QString &username, const QString &password);
     QByteArray retrieveHistoryData();
-    void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
+   // void authenticateUser(const QByteArray &data, QTcpSocket *clientSocket);
 
 signals:
     void requestLoginHistory();
@@ -35,6 +37,7 @@ public slots:
 private:
     QStringList hardcodedRFIDs;
     QTcpSocket* clientSocketpointer; // Store pointer to client socket
+    Authenticator authenticator;
 };
 
 #endif // SOCKETSERVER_H
