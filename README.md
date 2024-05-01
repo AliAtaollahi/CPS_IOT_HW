@@ -1077,3 +1077,34 @@ Here, the server successfully recognizes an authorized RFID tag, returning a `20
 This screenshot shows the server handling an unauthorized RFID tag, returning a `401 Unauthorized` status, highlighting the security measures in place:
 ![Authorized Access](CA1/Pics/screenshot(server)/failed.png)
 
+
+Here's a refined description for your GIF that will be added to your README. This description concisely outlines each stage of the demonstration, helping viewers understand the sequence of operations and system interactions.
+
+---
+
+## System Demonstration GIF Description
+![System Operation Demonstration](CA1/Pics/screenshot(SimulationInProteus)/Test_speedUp.gif)
+
+This GIF demonstrates the complete operational flow of our IoT-Based Entry and Exit Management System, showcasing both the server and client (GUI) initialization, the simulation in Proteus, and the real-time interactions among the terminal, LEDs, door mechanisms, and LCD display. The scenario unfolds as follows:
+
+1. **System Initialization**:
+   - The process starts with the server and client applications being launched. This sets up the environment necessary for handling RFID-based access control.
+
+2. **Proteus Simulation**:
+   - The GIF shows a simulation in Proteus where all hardware components are visualized. This includes the RFID sensor, Arduino board, servo motor (door control), LEDs, and LCD display.
+
+3. **Operational Sequence**:
+   - **Handshaking**: Initial communication between the Arduino and the server is established, verifying connectivity and readiness.
+   - **First Valid RFID Entry**: An authorized RFID tag is presented. The green LED lights up, indicating access granted. The RFID tag is displayed on the LCD, and the servo motor opens the door for 30 seconds.
+   - **Door Closure**: After the time elapses, the door automatically closes.
+   - **Unauthorized RFID Entry**: An unauthorized RFID tag is scanned. The system reacts by displaying "Access Denied" on the LCD. The door remains closed, and the red LED stays illuminated, signaling denied access.
+   - **Sequential RFID Authentication**:
+     - **Valid RFID**: The door reopens following another valid RFID detection.
+     - **Invalid RFID**: Following the valid entry, an invalid RFID is presented again, resulting in the door closing and maintaining the "Access Denied" status.
+
+4. **History Monitoring**:
+   - Throughout the process, each RFID interaction is logged and displayed on the client's GUI in real time, allowing for monitoring and review of access events.
+
+This comprehensive demonstration ensures that all system components are functioning correctly and interacting as designed, providing a visual verification of the system’s operational effectiveness.
+
+**Note**: The GIF has been speeded up for a concise demonstration. For a real-time view of the system in action, please visit [this link](https://github.com/AliAtaollahi/CPS_IOT_HW/blob/main/CA1/Pics/screenshot(SimulationInProteus)/Test.mp4).
