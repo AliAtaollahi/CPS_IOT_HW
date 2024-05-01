@@ -4,9 +4,9 @@
 
 This project develops a system to control the entry and exit of individuals in a company using IoT technologies. The system utilizes RFID for identification and an Arduino board equipped with an ENC28J60 Ethernet module to handle door mechanisms and data transmission. A simple web server is implemented in the cloud to manage access permissions, and a monitoring system is set up to track and display entry events.
 
-## Features
+## Key Features
 
-- **RFID Authentication:** Utilizes RFID sensors and tags to identify individuals entering or exiting the facility.
+- **RFID Authentication:** Utilizes RFID sensors and tags for identifying individuals.
 - **Arduino Control:** Manages door operations such as opening and closing based on authentication status using a servo motor.
 - **Web Server:** Hosts a simple server in the cloud to store a list of authorized individuals and handle authentication requests.
 - **Monitoring System:** A GUI monitoring system that displays entry events as they occur, developed using Qt and WebSockets for live data updates.
@@ -20,7 +20,8 @@ This project develops a system to control the entry and exit of individuals in a
 - ENC28J60 Ethernet module
 - Servo motor for door control
 - LEDs for status indication (green for access granted, red for denied)
-
+- LCD display to show feedback on authentication status.
+  
 ### Software Requirements
 
 - **Arduino IDE:** For programming the Arduino board.
@@ -32,7 +33,7 @@ This project develops a system to control the entry and exit of individuals in a
 1. **Arduino Setup:**
    - Install the Arduino IDE and load the provided script.
    - Connect the ENC28J60 module and configure it for Ethernet access.
-   - Attach the RFID sensor, servo motor, and LEDs as per the circuit diagram provided.
+   - Attach the RFID sensor, servo motor, LEDs, and LCD.
 
 2. **Web Server Implementation:**
    - Set up a basic HTTP server that can handle requests and send responses to the Arduino board.
@@ -75,20 +76,20 @@ This folder holds simulation files for Proteus software, allowing us to simulate
    - The Proteus project file, `CPS CA1.pdsprj`, provides the simulation environment where we can visualize and test the behavior of the IoT-based entry and exit management system.
 
 #### Components:
-   - **Terminal for Entering RFID Tag**: This component simulates the RFID tag reader terminal where individuals can tap their RFID cards for authentication. In the simulation, we can input RFID tag data to emulate different user interactions.
+   - **RFID Reader Terminal**: This component simulates the RFID tag reader terminal where individuals can tap their RFID cards for authentication. In the simulation, we can input RFID tag data to emulate different user interactions.
    
-   - **Arduino Board**: The Arduino microcontroller is simulated to execute the control logic for the entry and exit management system. It interfaces with the RFID reader, servo motor, LEDs, and Ethernet module to perform authentication and control door access.
+   - **Arduino Board**: The Arduino microcontroller is simulated to execute the control logic for the entry and exit management system. It interfaces with the RFID reader, servo motor, LEDs, LCD, and Ethernet module to perform authentication and control door access.
    
    - **ENC28J60 Ethernet Module**: This module is simulated to provide Ethernet connectivity for the Arduino board. It enables communication between the Arduino and the cloud-based server for authentication and data transmission.
    
    - **Servo Motor for Door Control**: The servo motor is simulated to mimic the physical door mechanism controlled by the Arduino board. In the simulation, we can observe how the servo motor responds to commands from the Arduino, such as opening and closing the door.
    
-   - **LEDs for Status Indication**: LED components are included in the simulation to visually represent the status of access control operations. Green LEDs indicate access granted, while red LEDs indicate access denied.
+   - **LEDs and LCD for Status Indication**: Indicate system status and display access messages.
 
 #### Screenshots (imulation in Proteus)
 1. "Starting and Waiting for Handshake"
 ![Screenshot 1 - Starting and Waiting for Handshake](CA1/Pics/screenshot(SimulationInProteus)/1.jpg)
-*Description: This screenshot captures the initial state of the system where the Arduino board is powered on and waiting to establish a connection with the cloud server. The system is in standby mode, indicated by the LEDs showing no activity.*
+*Description: This screenshot captures the initial state of the system where the Arduino board is powered on and waiting to establish a connection with the cloud server. The system is in standby mode.*
 
 2. "Handshake is Done"
 ![Screenshot 2 - Handshake is Done](CA1/Pics/screenshot(SimulationInProteus)/2.jpg)
@@ -100,7 +101,7 @@ This folder holds simulation files for Proteus software, allowing us to simulate
 
 4. "Input an Incorrect RFID -> Close Door and Red LED"
 ![Screenshot 4 - Input an Incorrect RFID](CA1/Pics/screenshot(SimulationInProteus)/4.jpg)
-*Description: This screenshot depicts the scenario where an incorrect RFID tag is presented for authentication. The Arduino board sends the RFID data to the cloud server, but authentication fails. Consequently, the servo motor closes the door, and the red LED lights up, signaling access denied.*
+* This screenshot depicts the scenario where an incorrect RFID tag is presented for authentication. The Arduino board sends the RFID data to the cloud server, but authentication fails. Consequently, the servo motor keeps the door closed. The red LED, which is normally on to indicate a secure state, remains lit, signaling that access is denied.*
 
 5. "Sequential RFID Authentication - Open Door, Then Close for Second Person"
 ![GIF - Sequential RFID Authentication](CA1/Pics/screenshot(SimulationInProteus)/5.gif)
@@ -115,25 +116,33 @@ The embedded software for the IoT-based Entry and Exit Management System is desi
 
 #### Key Libraries
 
-- **Servo.h**: Manages the servo motor used to open and close the door.
-- **EtherCard.h**: Facilitates Ethernet communications for interfacing with the cloud server.
-
+- **`Servo.h`**: Manages the servo motor used to open and close the door.
+- **`EtherCard.h`**: Facilitates Ethernet communications for interfacing with the cloud server.
+- **`LiquidCrystal.h`**: Controls the LCD display for real-time feedback to the user.
+  
 #### Configuration
+Defines the pin configuration and timeout settings for the system, ensuring that components such as LEDs, LCD and servo motors are correctly managed.  
 
 ```cpp
-
 #define TIMEOUT_TIME 1000
-#define GREEN_LED 2
-#define RED_LED 3
+#define LEDS 2
 #define RX_PIN 0
 #define TX_PIN 1
-#define SERVO_PIN 4
+#define SERVO_PIN 3
+#define D4 6
+#define D5 7
+#define D6 8
+#define D7 9
+#define RS 5
+#define EN 4
 ```
-Defines the pin configuration and timeout settings for the system, ensuring that components such as LEDs and servo motors are correctly managed.
 
 #### Initialization
+Initializes the servo motor, LCD, and sets up networking parameters including MAC address, IP addresses, and the remote server details.  
 
 ```cpp
+LiquidCrystal lcd(RS, EN, D4, D5, D6, D7);
+
 Servo doorServo;
 
 
@@ -154,19 +163,17 @@ String inputString = "";
 boolean doorOpen = false;
 unsigned long doorOpenTime = 0;
 Stash stash;
-
 ```
-Initializes the servo motor and sets up networking parameters including MAC address, IP addresses, and the remote server details.
 
-#### Main Functions:
-
-#### Setup Function
+#### setup Function
+This section configures the GPIO pins, initializes the LCD, and attaches the servo to its designated pin. Network initialization and diagnostic outputs are also set here.
 ```cpp
 void setup() {
-  pinMode(GREEN_LED, OUTPUT);
-  pinMode(RED_LED, OUTPUT);
+  pinMode(LEDS, OUTPUT);
   pinMode(RX_PIN, INPUT);
   pinMode(TX_PIN, OUTPUT);
+  pinMode(EN, OUTPUT);
+  lcd.begin(25,2);
   doorServo.attach(SERVO_PIN);
   doorServo.write(0);
   Serial.begin(9600);
@@ -184,22 +191,27 @@ void setup() {
   Serial.println("Handshake completed");
 }
 ```
-Configures the GPIO pins and attaches the servo to its designated pin. Network initialization and diagnostic outputs are also set here.
+
 Here’s a brief and focused explanation for each subject within our `setup()` function:  
 
 **1. Selecting Pins** 
-Configures GPIO pins for the LEDs and RX/TX pins, setting the directionality (input or output) for each.  
+Configures GPIO pins for the LEDs, EN (for LCD) and RX/TX pins, setting the directionality (input or output) for each.  
 
-**2. Closing Door**   
+**2. LCD initialization**
+Initializes the LCD display with a specification of 25 characters per line and 2 lines. This is where messages like access status and RFID data will be displayed.  
+
+**3. Closing Door**   
 Attaches the servo motor to its control pin and initializes it to a closed position, ensuring the door starts closed upon system reset.
 
-**3. Initializing Serial and Ethernet Port**    
+**4. Initializing Serial and Ethernet Port**    
 Initializes serial communication at 9600 baud rate for debugging and configures the Ethernet module with static IP settings.  
 
-**4. Performing Handshake**   
+**5. Performing Handshake**   
 Establishes a network route to the server, prints server IP for verification, waits for gateway availability, then sends a handshake to the server confirming network connectivity.
 
 #### Main Loop
+Continuously reads RFID tags, checks them against server-side validation, and controls door access. Updates LED status based on authentication results.  
+
 ```cpp
 void loop() {
   ether.packetLoop(ether.packetReceive());
@@ -217,43 +229,47 @@ void loop() {
   
   if (doorOpen) {
     // Check if 30 seconds have elapsed since the door was opened
-    if (millis() - doorOpenTime >= 5000) {
+    if (millis() - doorOpenTime >= 10000) {
       doorOpen = false;
+      digitalWrite(LEDS, LOW);
       doorServo.write(0);
-      digitalWrite(GREEN_LED, LOW);
       inputString = "";
     }
   }
 
     // If the receivedString has reached 10 characters
     if (inputString.length() == 10) {
-      boolean sequenceResult = checkRFID(inputString);
+        lcd.clear();
+        boolean sequenceResult = checkRFID(inputString);
+
 
       Serial.println("  \n ");
       Serial.print("Sequence Check Result: ");
       Serial.println(sequenceResult ? "Correct" : "Incorrect");
       
       if (sequenceResult) {
-        digitalWrite(GREEN_LED, HIGH);
-        digitalWrite(RED_LED, LOW);
+        lcd.print(inputString);
+        inputString = "";
+        
+        digitalWrite(LEDS, HIGH);
         doorServo.write(90);
         doorOpen = true;
         doorOpenTime = millis(); // Record the time when the door was opened
       } else {
         // If the sequence is incorrect, close the door
-        digitalWrite(GREEN_LED, LOW);
-        digitalWrite(RED_LED, HIGH);
+        lcd.print("Access denied");
+        
+        digitalWrite(LEDS, LOW);
         doorServo.write(0);
 		    
         delay(500);
-        digitalWrite(RED_LED, LOW);
         doorOpen = false;
       }
       inputString = "";
     }
 }
 ```
-Continuously reads RFID tags, checks them against server-side validation, and controls door access. Updates LED status based on authentication results. Here's a breakdown of the specific parts of the Arduino `loop()` function provided, detailing how it handles the RFID data received from the terminal, checks its validity, and manages access control logic based on the RFID check result:
+ Here's a breakdown of the specific parts of the Arduino `loop()` function provided, detailing how it handles the RFID data received from the terminal, checks its validity, and manages access control logic based on the RFID check result:
 
 **1. Receiving RFID from Terminal**
 - **Network Data Handling**: Maintains the Ethernet connection and processes any packets that have been received.
@@ -266,16 +282,24 @@ Continuously reads RFID tags, checks them against server-side validation, and co
 
 **3. Handling Logic**  
 - **For Correct RFID**:
-  - **LEDs and Door**: Turns the GREEN LED on and the RED LED off, indicating access granted. Opens the door by setting the servo to 90 degrees.
+  - **LEDs, LCD and Door**: Turns the GREEN LED on and the RED LED off, indicating access granted. Opens the door by setting the servo to 90 degrees.
   - **Time Tracking**: Marks the time the door was opened to check for auto-close timing.
 - **For Incorrect RFID**:
   - **LEDs and Door**: Turns the GREEN LED off and the RED LED on, signaling access denied. Resets the door to a closed position by setting the servo to 0 degrees.
-  - **Reset LEDs**: Briefly displays the RED LED before turning it off after a delay, preparing for the next access attempt.
 - **String Reset**: Clears `inputString` to ready the system for the next RFID read cycle.
-
-This detailed description maps out how the system handles each step of RFID data processing and the corresponding access control logic, ensuring clarity in how security and access are managed within the system.
+- 
+### sendHandshake Function
+The `getStatus` function is designed to extract a status code from a response string (reply) and store it in the status array.
+```cpp
+void getStatus(char* reply, char* status) { 
+  memcpy(status, &reply[13], 2);
+  status[2] = '\0';
+}
+```
 
 #### checkRFID Function
+This function encapsulates a network interaction pattern where an RFID tag is sent to a server for authorization. The use of a TCP/IP stack (via the EtherCard library) and careful handling of Ethernet buffers and sessions allows for efficient network communications on resource-constrained devices like those running Arduino. The decision to grant or deny access is made based on the server's response to the transmitted RFID tag.
+
 ```cpp
 bool checkRFID(String tag) {
   ether.packetLoop(ether.packetReceive());
@@ -303,19 +327,20 @@ bool checkRFID(String tag) {
       
       char status[3];
       getStatus(reply, status);
+      // for debugging
       /*Serial.println(reply);
       Serial.println(status);*/
 
       return strcmp(status, "OK") == 0 ? true : false;
     }
-    delay(200);
+    //delay(200);
 
   }
 
   return false; // no access
 }
 ```
-This function encapsulates a network interaction pattern where an RFID tag is sent to a server for authorization. The use of a TCP/IP stack (via the EtherCard library) and careful handling of Ethernet buffers and sessions allows for efficient network communications on resource-constrained devices like those running Arduino. The decision to grant or deny access is made based on the server's response to the transmitted RFID tag.
+Here's a breakdown of the specific parts of this function:
 
 **1. Packet Processing and Stash Setup**
 - **Packet Processing**: The function starts by handling any pending Ethernet packets with `ether.packetReceive()` and immediately passes them to `ether.packetLoop()`. This ensures the Ethernet buffer is processed and ready for new operations.
@@ -331,10 +356,10 @@ This function encapsulates a network interaction pattern where an RFID tag is se
   - **Access Granted**: If the status is "OK", the function returns `true`, indicating that access has been authorized based on the server's positive acknowledgment of the RFID data.
   - **No Response or Non-OK Status**: If the timeout expires without a response, or if the response status is not "OK", the function returns `false`, indicating that access has been denied.
 
-**4. Delay Handling**
-- **Network Delay**: Between each check for responses, there is a delay of 200 milliseconds to reduce the load on the network interface and prevent flooding the network with rapid packet checks.
 
 ### sendHandshake Function
+The sendHandshake function in our code is designed to establish an initial communication session between the Arduino-based system and a server. This handshake is critical as it sets up a preliminary connection with the server, reducing the overhead for subsequent RFID tag transmissions by ensuring the communication channel is open and responsive.  
+
 ```cpp
 bool sendHandshake() {
   ether.packetLoop(ether.packetReceive());
@@ -365,7 +390,7 @@ bool sendHandshake() {
   return false;
 }
 ```
-The sendHandshake function in our code is designed to establish an initial communication session between the Arduino-based system and a server. This handshake is critical as it sets up a preliminary connection with the server, reducing the overhead for subsequent RFID tag transmissions by ensuring the communication channel is open and responsive. Here’s a breakdown focusing on the core components and their purposes:
+ Here’s a breakdown focusing on the core components and their purposes:
 
 **1. Packet Handling and Data Preparation**
 - **Packet Processing**: The function starts by receiving and processing packets to maintain an active Ethernet interface using `ether.packetReceive()` and `ether.packetLoop()`.
@@ -379,8 +404,6 @@ The sendHandshake function in our code is designed to establish an initial commu
 **3. Cleanup and Return**
 - **Buffer Flushing and Response Verification**: The function checks for a reply from the server using `ether.tcpReply(session)`. If a reply is detected (`reply != 0`), the function returns `true`, indicating a successful connection.
 - **Timeout Handling**: If no reply is received within the 5-second window, the function returns `false`, signifying that the handshake attempt was unsuccessful.
-
-
 
 ---
 ### Client Folder
