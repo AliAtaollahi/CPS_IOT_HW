@@ -1,0 +1,14 @@
+[
+  {
+    "username": "1234",
+    "date": "2024-04-30",
+    "time": "10:00",
+    "permited_": true
+  },
+  {
+    "username": "5678",
+    "date": "2024-04-30",
+    "time": "11:30",
+    "permited_": false
+  }
+]

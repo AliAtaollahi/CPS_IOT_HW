@@ -1,13 +1,14 @@
-C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/EWIEGA46WW/moc_cpsapplication.cpp: C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpsapplication.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/moc_predefs.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpsbutton.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpshistorywindow.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpslabel.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpsmainwindow.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpssocket.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpstextfield.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpswindowsapitools.h \
+C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/EWIEGA46WW/moc_cpsapplication.cpp: C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpsapplication.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/moc_predefs.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpsbutton.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpshistorywindow.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpslabel.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpsmainwindow.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpssocket.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpstextfield.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpswindowsapitools.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/QJsonArray \
+  F:/Qt/6.7.0/mingw_64/include/QtCore/QJsonDocument \
   F:/Qt/6.7.0/mingw_64/include/QtCore/QJsonObject \
   F:/Qt/6.7.0/mingw_64/include/QtCore/QObject \
   F:/Qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
@@ -71,6 +72,7 @@ C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoring
   F:/Qt/6.7.0/mingw_64/include/QtCore/qiterable.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/qjsonarray.h \
+  F:/Qt/6.7.0/mingw_64/include/QtCore/qjsondocument.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/qjsonobject.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/qjsonvalue.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/qlatin1stringview.h \

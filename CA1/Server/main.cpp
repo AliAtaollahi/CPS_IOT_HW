@@ -1,73 +1,34 @@
-#include <QTcpServer>
-#include <QTcpSocket>
-#include <QDebug>
 #include <QCoreApplication>
+#include "loginhistorydatabase.h"
+#include "socketserver.h"
+#include "customizedhttpserver.h"
 
-class Server : public QTcpServer {
-    Q_OBJECT
-public:
-    Server(QObject *parent = nullptr) : QTcpServer(parent) {}
-
-protected:
-    void incomingConnection(qintptr socketDescriptor) override {
-        QTcpSocket *clientSocket = new QTcpSocket(this);
-        if (!clientSocket->setSocketDescriptor(socketDescriptor)) {
-            qDebug() << "Error setting socket descriptor";
-            return;
-        }
-
-        qDebug() << "New connection from:" << clientSocket->peerAddress().toString();
-
-        connect(clientSocket, &QTcpSocket::readyRead, this, [clientSocket]() {
-            while (clientSocket->bytesAvailable()) {
-                QByteArray data = clientSocket->readAll();
-                qDebug() << "Received:" << data;
-                // Split the message using ':'
-                QList<QByteArray> parts = data.split(':');
-
-                // Check if there are at least two parts
-                if (parts.size() >= 2) {
-                    // Extract the username and password
-                    QString username = QString::fromUtf8(parts[0]);
-                    QString password = QString::fromUtf8(parts[1]);
-
-                    // Check if the username and password match the fixed strings
-                    if (username == "test" && password == "1234") {
-                        qDebug() << "Access granted for:" << username;
-                        clientSocket->write("Access granted\n"); // Send a message indicating access granted
-                        // Process further actions for authenticated client
-                    } else {
-                        qDebug() << "Access denied for:" << username;
-                        clientSocket->write("Access denied\n"); // Send a message indicating access denied
-                        clientSocket->close(); // Close the connection
-                    }
-
-                    // Do something with the username and password
-                    qDebug() << "Username:" << username << "Password:" << password;
-                } else {
-                    qDebug() << "Invalid message format";
-                }
-                clientSocket->write(data); // Echo back
-            }
-        });
-
-        connect(clientSocket, &QTcpSocket::disconnected, this, [clientSocket]() {
-            qDebug() << "Connection closed for:" << clientSocket->peerAddress().toString();
-            clientSocket->deleteLater();
-        });
-    }
-};
+const QString USERS_FILE_PATH = "../../data/employees.json";
+const QString ADMINS_FILE_PATH = "../../data/admins.json";
+const QString HISTORY_FILE_PATH = "../../data/history.json";
+const int HTTP_SERVER_PORT = 80;
+const int WEB_SOCKET_PORT = 5050;
 
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    Server server;
-    if (!server.listen(QHostAddress::LocalHost, 5050)) {
+    CustomizedHttpServer customizedHttpServer = CustomizedHttpServer(HTTP_SERVER_PORT, USERS_FILE_PATH);
+    qDebug() << "Server running on port " << HTTP_SERVER_PORT;
+
+    SocketServer server;
+    if (!server.listen(QHostAddress::LocalHost, WEB_SOCKET_PORT)) {
         qDebug() << "Server could not start!";
         return 1;
     }
-
     qDebug() << "Server started on port" << server.serverPort();
+
+    LoginHistoryDatabase loginHistoryDatabase(HISTORY_FILE_PATH);
+
+    QObject::connect(&customizedHttpServer, &CustomizedHttpServer::resultRfidCheck, &server, &SocketServer::sendNewUserDataToAdmin);
+    QObject::connect(&customizedHttpServer, &CustomizedHttpServer::resultRfidCheckHistory, &loginHistoryDatabase, &LoginHistoryDatabase::addLoginHistory);
+
+    QObject::connect(&server, &SocketServer::requestLoginHistory, &loginHistoryDatabase, &LoginHistoryDatabase::handleRequestLoginHistory);
+    QObject::connect(&loginHistoryDatabase, &LoginHistoryDatabase::LoginHistoryResult, &server, &SocketServer::SendLoginHistoryResult);
+
     return a.exec();
 }
-#include "main.moc"

@@ -1,5 +1,5 @@
-C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/EWIEGA46WW/moc_cpstextfield.cpp: C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/cpstextfield.h \
-  C:/Users/bardia/Desktop/Cyber-Physical-Systems-Projects/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/moc_predefs.h \
+C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/EWIEGA46WW/moc_cpstextfield.cpp: C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/cpstextfield.h \
+  C:/Users/bardia/Desktop/test\ cps\ clone\ for\ gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem_autogen/moc_predefs.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/q20functional.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/q20memory.h \
   F:/Qt/6.7.0/mingw_64/include/QtCore/q20type_traits.h \

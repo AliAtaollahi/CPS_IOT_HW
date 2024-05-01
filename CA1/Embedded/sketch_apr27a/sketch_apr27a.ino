@@ -67,13 +67,12 @@ bool sendHandshake() {
     ether.packetLoop(ether.packetReceive());
 
     // Flush the Ethernet buffer
-    while (ether.tcpReply(session) != 0) {
-      // Read and discard the data
       const char* reply = ether.tcpReply(session);
-    }
+      if(reply != 0)
+        return true;
   }
 
-  return true;
+  return false;
 }
 
 bool checkRFID(String tag) {
@@ -133,7 +132,7 @@ void setup() {
 
   ether.clientWaitingGw();
   Serial.println("Gateway found");
-  sendHandshake();
+  while(!sendHandshake());
   Serial.println("Handshake completed");
 }
 
