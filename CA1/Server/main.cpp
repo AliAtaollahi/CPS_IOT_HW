@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     QObject::connect(&customizedHttpServer, &CustomizedHttpServer::resultRfidCheckHistory, &loginHistoryDatabase, &LoginHistoryDatabase::addLoginHistory);
 
     QObject::connect(&server, &SocketServer::requestLoginHistory, &loginHistoryDatabase, &LoginHistoryDatabase::handleRequestLoginHistory);
-    QObject::connect(&loginHistoryDatabase, &LoginHistoryDatabase::LoginHistoryResult, &server, &SocketServer::SendLoginHistoryResult);
+    QObject::connect(&loginHistoryDatabase, &LoginHistoryDatabase::loginHistoryResult, &server, &SocketServer::SendLoginHistoryResult);
 
     return a.exec();
 }
