@@ -31,7 +31,7 @@ QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest
     QString dateString = currentDate.toString("yyyy-MM-dd");
     QString timeString = currentTime.toString("HH:mm:ss");
 
-    bool isAuthorized = employeesDatabase_.handleRfidReceived(rfid);
+    bool isAuthorized = employeesDatabase_.checkRFIDMatch(rfid);
 
     emit resultRfidCheck(isAuthorized, rfid);
     emit resultRfidCheckHistory(isAuthorized, dateString, timeString, rfid);

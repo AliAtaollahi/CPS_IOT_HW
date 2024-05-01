@@ -1,9 +1,0 @@
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/MonitoringSystem.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/MonitoringSystem_autogen_timestamp_deps.dir
-C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/CMakeFiles/MonitoringSystem_autogen.dir

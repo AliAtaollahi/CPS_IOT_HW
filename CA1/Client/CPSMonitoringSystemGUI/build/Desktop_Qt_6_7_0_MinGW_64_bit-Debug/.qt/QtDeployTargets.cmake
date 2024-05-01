@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_MonitoringSystem_FILE C:/Users/bardia/Desktop/test cps clone for gui/CPS_IOT_HW/CA1/Client/CPSMonitoringSystemGUI/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/MonitoringSystem.exe)
-set(__QT_DEPLOY_TARGET_MonitoringSystem_RUNTIME_DLLS F:/Qt/6.7.0/mingw_64/bin/Qt6Widgets.dll;F:/Qt/6.7.0/mingw_64/bin/Qt6Network.dll;F:/Qt/6.7.0/mingw_64/bin/Qt6Gui.dll;F:/Qt/6.7.0/mingw_64/bin/Qt6Core.dll)

@@ -35,9 +35,7 @@ bool SocketServer::isValidRFID(const QString &rfid) {
 void SocketServer::processData(QByteArray &data, QTcpSocket *clientSocket) {
     qDebug() << "in  SocketServer::processData";
     if(data == "historyRequest"){
-        qDebug() << "i am still in historyRequest.";
         emit requestLoginHistory();
-        qDebug() << "i have sent message in historyRequest.";
     }
     else{
         authenticateUser(data, clientSocket);
@@ -71,15 +69,12 @@ bool SocketServer::isValidUser(const QString &username, const QString &password)
 }
 
 void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
-    // Construct message with RFID and date/time
-    // Get current date and time
+
     QDateTime currentDateTime = QDateTime::currentDateTime();
 
-    // Extract date and time separately
     QDate currentDate = currentDateTime.date();
     QTime currentTime = currentDateTime.time();
 
-    // Convert date and time to strings
     QString dateString = currentDate.toString("yyyy-MM-dd");
     QString timeString = currentTime.toString("HH:mm:ss");
 
@@ -91,14 +86,11 @@ void SocketServer::sendNewUserDataToAdmin(bool isMatch, const QString &rfid) {
 
     QJsonDocument jsonDocument(messageObj);
 
-    // Convert the JSON document to a QByteArray
     QByteArray jsonData = jsonDocument.toJson();
 
-    // // Write the data to the socket
     qint64 bytesWritten = clientSocketpointer->write(jsonData);
 
     if (bytesWritten == -1) {
-        // Error handling: failed to write data
         qDebug() << "Failed to write data to socket:" << clientSocketpointer->errorString();
     } else {
         qDebug() << "WebSocket message sent to client:" << jsonData;
@@ -119,8 +111,8 @@ void SocketServer::SendLoginHistoryResult(const QVector<LoginHistory> &loginHist
             dataArray.append(obj);
         }
         QJsonObject mainObj;
-        mainObj["type"] = "history"; // Add the "type" field
-        mainObj["data"] = dataArray; // Add the "data" field with the array
+        mainObj["type"] = "history";
+        mainObj["data"] = dataArray;
 
         // Convert the main JSON object to a JSON document
         QJsonDocument jsonDocument(mainObj);

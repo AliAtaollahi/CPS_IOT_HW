@@ -12,12 +12,14 @@ public:
     explicit EmployeesDatabase(const QString &initialDataPath, QObject *parent = nullptr);
 
     const QVector<Employee>& getEmployeesVector() const;
-    bool handleRfidReceived(const QString &rfid);
+    bool checkRFIDMatch(const QString &rfid);
 
 private:
     QVector<Employee> employeesVector_;
 
-    void readEmployeesFromJson(const QString &path);
+    void loadEmployeesFromJson(const QString &path);
+    void parseEmployeesJson(const QByteArray &jsonData);
+    QByteArray readJsonFile(const QString &path);
 };
 
 #endif // EMPLOYEESDATABASE_H
