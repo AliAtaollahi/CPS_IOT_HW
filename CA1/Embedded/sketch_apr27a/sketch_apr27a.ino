@@ -107,7 +107,7 @@ bool checkRFID(String tag) {
 
       return strcmp(status, "OK") == 0 ? true : false;
     }
-    delay(200);
+    //delay(200);
 
   }
 
@@ -154,8 +154,9 @@ void loop() {
   
   if (doorOpen) {
     // Check if 30 seconds have elapsed since the door was opened
-    if (millis() - doorOpenTime >= 30000) {
+    if (millis() - doorOpenTime >= 10000) {
       doorOpen = false;
+      digitalWrite(LEDS, LOW);
       doorServo.write(0);
       inputString = "";
     }
