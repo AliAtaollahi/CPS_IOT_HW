@@ -121,7 +121,7 @@ The embedded software for the IoT-based Entry and Exit Management System is desi
 #### Configuration
 
 ```cpp
-#define TIMEOUT_TIME 200
+#define TIMEOUT_TIME 1000
 #define GREEN_LED 2
 #define RED_LED 3
 #define RX_PIN 0
@@ -281,7 +281,6 @@ This detailed description maps out how the system handles each step of RFID data
 bool checkRFID(String tag) {
   ether.packetLoop(ether.packetReceive());
   byte stash_desc = stash.create();
-  stash.print("rfid=");
   stash.print(tag);
   stash.save();
 
@@ -296,34 +295,45 @@ bool checkRFID(String tag) {
   byte session = ether.tcpSend();
 
   unsigned long startTime = millis();
-  while (millis() - startTime < TIMEOUT_TIME) { 
+  while (millis() - startTime < TIMEOUT_TIME) {
     ether.packetLoop(ether.packetReceive());
     
     const char* reply = ether.tcpReply(session);
     if (reply != 0) {
 
-      return true;
+      
+      char status[3];
+      getStatus(reply, status);
+      /*Serial.println(reply);
+      Serial.println(status);*/
+
+      return strcmp(status, "OK") == 0 ? true : false;
     }
+    delay(200);
 
   }
 
   return false; // no access
 }
 ```
-The `checkRFID` function sends an HTTP POST request containing RFID tag data to a server using TCP/IP communication managed by the EtherCard library. It waits for a server response within a specified timeout and interprets any received response as access granted, returning `true`; if no response is received within the timeout, it returns `false`, indicating access denied. This method effectively determines the authorization status based on server communication.Here’s an explanation of the `checkRFID` function that provides more detail on how the Arduino sketch sends HTTP requests using TCP and handles server responses to manage access control:
+This function encapsulates a network interaction pattern where an RFID tag is sent to a server for authorization. The use of a TCP/IP stack (via the EtherCard library) and careful handling of Ethernet buffers and sessions allows for efficient network communications on resource-constrained devices like those running Arduino. The decision to grant or deny access is made based on the server's response to the transmitted RFID tag.
 
-**1. HTTP Request Using TCP and Stash**
-- **Buffer Preparation**: Begins by processing any received Ethernet packets. It then uses the `Stash` class to create a buffer for constructing the HTTP request. `Stash` is a utility for managing string and data storage in limited memory environments like Arduino.
-- **Data Stashing**: Forms an HTTP POST request containing the RFID tag. It saves this string in the stash buffer and prepares an HTTP POST request.
-- **HTTP Request Construction**: Constructs an HTTP POST request with headers and the RFID data as the body. This is formatted for the specific requirements of the server it communicates with.
-- **Sending Request**: Initiates a TCP session to send the prepared HTTP request to the predefined server IP.
+**1. Packet Processing and Stash Setup**
+- **Packet Processing**: The function starts by handling any pending Ethernet packets with `ether.packetReceive()` and immediately passes them to `ether.packetLoop()`. This ensures the Ethernet buffer is processed and ready for new operations.
+- **Stash Buffer**: A stash buffer is created with `stash.create()` for building the HTTP POST request. The RFID tag data is added to the stash using `stash.print(tag)` and finalized with `stash.save()`.
 
-**2. Handling Server Response**
-- **Response Waiting Loop**: Monitors for a response from the server within a specified timeout period. This loop also processes any incoming Ethernet packets during this time to keep the network interface active.
-- **Response Evaluation**: Checks if any reply has been received for the TCP session. This implementation assumes any reply from the server indicates successful communication. 
-- **Access Decision**:
-  - **Access Granted**: If a reply is received, the function returns `true`, indicating that the server has recognized and processed the RFID data, implicitly granting access.
-  - **No Access**: If no reply is received within the timeout period, the function concludes with `false`, indicating no access granted due to a lack of response or server acknowledgment.
+**2. HTTP POST Request Preparation**
+- **HTTP Request Setup**: An HTTP POST request is constructed with a path and host extracted from predefined variables (`website`). The `Stash::prepare` method is used, inserting various elements into the HTTP headers such as the path, host, content length (determined by `stash.size()`), and the stash descriptor.
+- **Sending the Request**: `ether.tcpSend()` is called to open a TCP connection and send the prepared HTTP request. The ID of the TCP session is stored for later reference.
+
+**3. Response Handling**
+- **Response Timeout Loop**: The function waits for a server response within `TIMEOUT_TIME`. It continuously checks for responses by processing incoming packets and using `ether.tcpReply(session)` to check for replies specifically related to the opened TCP session.
+- **Extracting Status from Response**: If a response is detected, the function extracts a status code using a helper function `getStatus(reply, status)`. It then compares this status string with "OK".
+  - **Access Granted**: If the status is "OK", the function returns `true`, indicating that access has been authorized based on the server's positive acknowledgment of the RFID data.
+  - **No Response or Non-OK Status**: If the timeout expires without a response, or if the response status is not "OK", the function returns `false`, indicating that access has been denied.
+
+**4. Delay Handling**
+- **Network Delay**: Between each check for responses, there is a delay of 200 milliseconds to reduce the load on the network interface and prevent flooding the network with rapid packet checks.
 
 ### sendHandshake Function
 ```cpp
@@ -433,10 +443,6 @@ private: // members
 
 Several key modifications and new features were integrated into `cpsapplication.cpp` to enhance functionality and user experience:
 
-Certainly! The code lines you've provided involve the use of Qt's signal and slot mechanism, which is essential for handling asynchronous events in the application. Below is a detailed explanation of each connection made in `cpsapplication.cpp`:
-
-##### Detailed Explanation of Signal-Slot Connections:
-
 1. **Requesting History Data:**
    ```cpp
    QObject::connect(_window, &MainWindow::historyBtnClicked, this, &Application::sendHistoryRequest);
@@ -466,8 +472,24 @@ Certainly! The code lines you've provided involve the use of Qt's signal and slo
    QObject::connect(_socket, &CPSSocket::connectionChanged, _window, &MainWindow::changeRightPanelEnabled);
    ```
    This line connects the `connectionChanged` signal from the `CPSSocket` class to the `changeRightPanelEnabled` slot in the `MainWindow`. It enables or disables GUI elements based on the current network connection status (e.g., disabling the connect button to prevent duplicate connections).
+   
+Also We have made an update to the method responsible for enabling or disabling UI components in the `MainWindow` class. This change enhances the usability and responsiveness of the user interface. (in cpsmainwindow.cpp)
+Previous Code:
+```cpp
+void MainWindow::changeRightPanelEnabled(bool enabled)
+{
+    _rightPanel->setEnabled(enabled);
+}
+```
+Updated Code:
+```cpp
+void MainWindow::changeRightPanelEnabled(bool enabled){
+    _connectBtn->setEnabled(enabled);
+}
+```
 
-These connections are fundamental for the interactivity and responsiveness of your client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable your system to handle real-time data efficiently, ensuring that the GUI reflects the most current system status and logs.
+
+These connections are fundamental for the interactivity and responsiveness of our client application, allowing the GUI to react dynamically to backend changes and user inputs. They enable our system to handle data efficiently, ensuring that the GUI reflects the most current system status and logs.
 
 ##### History Window Display Logic:  
 Developed a method to process and display the history data received from the server. The method parses the JSON data, extracting necessary details and passing them to the history window for display.
@@ -496,7 +518,7 @@ void Application::showHistoryWindow(const QJsonObject &jsonObject)
 }
 ```
 ### Client Socket Implementation
-This section details the implementation of the `CPSSocket` class, which handles all TCP/IP communications between the client-side application and the server. This class is pivotal for sending and receiving data over the network, authenticating users, and retrieving real-time updates about entry events and history.
+This section details the implementation of the `CPSSocket` class, which handles all TCP/IP communications between the client-side application and the server. This class is pivotal for sending and receiving data over the network, authenticating admin, and retrieving updates about entry events and history.
 
 #### `cpssocket.h`
 
@@ -584,7 +606,7 @@ void CPSSocket::connectToServer(const QString &serverAddress, const QString &use
   - **Connection Attempt**: Attempts to connect to the specified server address on port 5050.
   - **Authentication**: Sends a combined string of username and password.
   - **Response Handling**: Waits for a response from the server to confirm connection and authentication success.
-  - **Signal Emission**: If authenticated (`responseData` equals "1"), disables further connection attempts and sets up to receive new data.
+  - **Signal Emission**: If authenticated (`responseData` equals "1"), disables further connection attempts and sets up to receive new data. (using `collectingNewData` )
   - **Error Handling**: Outputs errors if connection fails or times out.
 
 **4. Collecting New Data**
@@ -625,4 +647,411 @@ void CPSSocket::ExtractNewUserData(const QJsonObject &jsonObject) {
 This method retrieves the username, date, and time from the JSON object and emits the `newUser` signal with these details.
 
 ---
+
+### Server Folder
+This folder contains all necessary files for setting up and running the server that manages communication between the IoT devices (Arduino boards) and the client applications. The server is designed to handle requests over HTTP from Arduino boards for RFID authentication and to communicate with client applications via WebSocket.
+
+#### `request.cpp` & `request.h`
+These files encapsulate the functionality required to handle incoming HTTP requests.  
+The `.h` file declares the structure of the `Request` class, which includes methods for initializing a request object, parsing the content, and retrieving specific elements like headers or the body.The `.cpp` file implements these methods, detailing how the server processes and extracts data from incoming HTTP requests, which is critical for actions like RFID verification or command execution.  
+
+**`.h` file:**
+```cpp
+#ifndef REQUEST_H
+#define REQUEST_H
+
+#include <QJsonObject>
+#include <QJsonDocument>
+
+class Request
+{
+public:
+    Request();
+    Request(const QString &type, const QVariant  &data);
+
+    QString getType() const;
+    void setType(const QString &type);
+
+    QVariant  getData() const;
+    void setData(const QVariant  &data);
+
+    QJsonObject toJson() const;
+    static Request fromJson(const QJsonObject &json);
+
+private:
+    QString type_;
+    QVariant  data_;
+};
+
+#endif // REQUEST_H
+```
+**`.cpp` file:**
+```cpp
+
+#include "request.h"
+
+Request::Request() {}
+
+
+Request::Request(const QString &type, const QVariant  &data) : type_(type), data_(data) {}
+
+QString Request::getType() const {
+    return type_;
+}
+
+void Request::setType(const QString &type) {
+    type_ = type;
+}
+
+QVariant  Request::getData() const {
+    return data_;
+}
+
+void Request::setData(const QVariant  &data) {
+    data_ = data;
+}
+
+QJsonObject Request::toJson() const {
+    return QJsonObject{{"type", type_}, {"data", QJsonValue::fromVariant(data_)}};
+}
+
+Request Request::fromJson(const QJsonObject &json) {
+    return Request(json["type"].toString(), json["data"].toVariant());
+}
+
+```
+
+#### `response.cpp` & `response.h`
+The `Response` class, declared in the `.h` file and implemented in the `.cpp` file, manages the server's output to clients. This includes generating the appropriate HTTP response based on the processing of the request. It allows the server to easily set status codes and craft response bodies, which are essential for notifying clients of the results of their requests, whether they are accessing resources or executing commands.  
+
+**`.h` file:**
+```cpp
+#ifndef RESPONSE_H
+#define RESPONSE_H
+
+#include <QJsonObject>
+#include <QJsonDocument>
+
+class Response
+{
+public:
+    Response();
+    Response(const QVariant &data);
+
+    QVariant getData() const;
+    void setData(const QVariant &data);
+
+    QJsonObject toJson() const;
+    static Response fromJson(const QJsonObject &json);
+
+private:
+    QVariant data_;
+};
+
+#endif // RESPONSE_H
+```
+**`.cpp` file:**
+```cpp
+#include "response.h"
+
+Response::Response() {}
+
+Response::Response(const QVariant &data) : data_(data) {}
+
+QVariant Response::getData() const {
+    return data_;
+}
+
+void Response::setData(const QVariant &data) {
+    data_ = data;
+}
+
+QJsonObject Response::toJson() const {
+    QJsonObject json;
+    json["data"] = data_.toJsonObject();
+    return json;
+}
+
+Response Response::fromJson(const QJsonObject &json) {
+    return Response(QVariant::fromValue(json["data"]));
+}
+
+```
+
+
+#### `customizedhttpserver.cpp` & `customizedhttpserver.h`
+These files together define and implement a custom HTTP server tailored for our IoT system. The header file declares the server class and necessary methods, while the implementation file details how the server handles HTTP requests and responses.
+
+**`.h` file:**
+```cpp
+#ifndef CUSTOMIZEDHTTPSERVER_H
+#define CUSTOMIZEDHTTPSERVER_H
+
+#include <QObject>
+#include <QCoreApplication>
+#include <QHttpServer>
+#include <QHttpServerRequest>
+#include <QHttpServerResponse>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include "employeesdatabase.h"
+
+class CustomizedHttpServer : public QObject
+{
+    Q_OBJECT
+public:
+    explicit CustomizedHttpServer(int port, const QString &initialDataPath, QObject *parent = nullptr);
+    bool startServer(int port);
+
+signals:
+    void resultRfidCheck(bool isMatch, const QDateTime &currentTime, const QString &rfid);
+
+private slots:
+    QHttpServerResponse handleRequest(const QHttpServerRequest &request);
+
+private:
+    QHttpServer* httpServer_;
+    EmployeesDatabase employeesDatabase_;
+};
+
+#endif // CUSTOMIZEDHTTPSERVER_H
+```
+**`.cpp` file:**
+
+- **Constructor (`CustomizedHttpServer`)**: Sets up the employees database and configures the HTTP server to route `/rfid` POST requests through a designated handler that processes RFID data for authentication.
+```cpp
+CustomizedHttpServer::CustomizedHttpServer(int port, const QString &initialDataPath, QObject *parent) :
+    QObject(parent), employeesDatabase_(EmployeesDatabase(initialDataPath)), httpServer_(new QHttpServer())
+{
+    httpServer_->route("/rfid",QHttpServerRequest::Method::Post, [this](const QHttpServerRequest& request) {
+        return this->handleRequest(request);
+    });
+
+    startServer(port);
+}
+```  
+
+- **`startServer(int port)`**: Launches the server to listen on the specified port across all network interfaces, enabling it to receive incoming requests.
+```cpp
+bool CustomizedHttpServer::startServer(int port)
+{
+    return httpServer_->listen(QHostAddress::Any, port);
+}
+```  
+
+- **`handleRequest(const QHttpServerRequest& request)`**: Processes each POST request to `/rfid`, extracting RFID data, verifying it against the employee database, and returning the appropriate HTTP response based on whether the access is authorized. Also emits detailed results for system monitoring or logging.
+```cpp
+QHttpServerResponse CustomizedHttpServer::handleRequest(const QHttpServerRequest& request)
+{
+    QByteArray requestData = request.body();
+    QString rfid = requestData;
+
+    bool isAuthorized = employeesDatabase_.handleRfidReceived(rfid);
+
+    QDateTime currentTime = QDateTime::currentDateTime();
+    emit resultRfidCheck(isAuthorized, currentTime, rfid);
+
+    QByteArray result;
+    QHttpServerResponse::StatusCode statusCode;
+    if (isAuthorized) {
+        result = "1";
+        statusCode = QHttpServerResponse::StatusCode::Ok;
+    }
+    else {
+        result = "0";
+        statusCode = QHttpServerResponse::StatusCode::Unauthorized;
+    }
+
+    return QHttpServerResponse(result, statusCode);
+}
+```
+This setup ensures robust handling of access control requests, providing secure and efficient authentication management tailored to the needs of the IoT system. T
+
+#### `employee.cpp` & `employee.h`
+These files define and implement the Employee class, responsible for encapsulating employee-related data within the system.
+**`.h` file:**  
+```cpp
+#include "employee.h"
+
+Employee::Employee() {
+    rfidTag_ = nullptr;
+}
+
+Employee::Employee(const QString &rfidTag) : rfidTag_(rfidTag) {};
+
+bool Employee::checkRFIDTagMatched(const QString &rfidTag) const{
+    return rfidTag_ == rfidTag;
+}
+```
+**`.cpp` file:**
+These class provides a straightforward implementation suited for systems where RFID is the primary identifier for employees.
+```cpp
+#ifndef EMPLOYEE_H
+#define EMPLOYEE_H
+
+#include <QJsonObject>
+#include <QJsonDocument>
+
+class Employee
+{
+public:
+    Employee();
+    Employee(const QString &rfidTag);
+    bool checkRFIDTagMatched(const QString &rfidTag) const;
+private:
+    QString rfidTag_;
+};
+
+#endif // EMPLOYEE_H
+```
+
+#### `employeesdatabase.cpp` & `employeesdatabase.h`  
+These files encompass the `EmployeesDatabase` class, The `EmployeesDatabase` class manages a collection of employees, specifically their RFID tags, to facilitate access control within the system. It loads employee data from a JSON file at initialization and provides methods to verify RFID tags against this data.
+
+**`.h` file:**  
+```cpp
+#ifndef EMPLOYEESDATABASE_H
+#define EMPLOYEESDATABASE_H
+
+#include <QObject>
+#include <QVector>
+#include "employee.h"
+
+class EmployeesDatabase : public QObject
+{
+    Q_OBJECT
+public:
+    explicit EmployeesDatabase(const QString &initialDataPath, QObject *parent = nullptr);
+
+    const QVector<Employee>& getEmployeesVector() const;
+    bool handleRfidReceived(const QString &rfid);
+
+private:
+    QVector<Employee> employeesVector_;
+
+    void readEmployeesFromJson(const QString &path);
+};
+
+#endif // EMPLOYEESDATABASE_H
+```
+**`.cpp` file:**
+
+- **Constructor (`EmployeesDatabase`)**: Loads employee data from a JSON file specified by the path provided, initializing the database with the necessary employee information for immediate use.
+```cpp
+EmployeesDatabase::EmployeesDatabase(const QString &initialDataPath, QObject *parent) : QObject(parent)
+{
+    readEmployeesFromJson(initialDataPath);
+}
+```
+- **`getEmployeesVector`**: Grants read-only access to the vector of employees, useful for operations requiring data on all employees.
+```cpp
+const QVector<Employee>& EmployeesDatabase::getEmployeesVector() const
+{
+    return employeesVector_;
+}
+```
+- **`readEmployeesFromJson`**: Parses employee data from a JSON file, creating employee records for each valid entry. This method ensures the database is populated with current and accurate information from the specified file.
+```cpp
+void EmployeesDatabase::readEmployeesFromJson(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "Failed to open " + path;
+        return;
+    }
+
+    QByteArray jsonData = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(jsonData);
+    if (!doc.isArray()) {
+        qDebug() << "Invalid JSON format in " + path;
+        return;
+    }
+
+    QJsonArray employeesArray = doc.array();
+    for (const QJsonValue& employeeValue : employeesArray) {
+        if (!employeeValue.isObject()) {
+            qDebug() << "Invalid employee data in " + path;
+            continue;
+        }
+
+        QJsonObject employeeObject = employeeValue.toObject();
+        QString rfidTag = employeeObject["rfid"].toString();
+
+        Employee employee(rfidTag);
+        employeesVector_.append(employee);
+    }
+}
+```
+- **`handleRfidReceived`**: Verifies a received RFID tag against the database, returning a boolean to indicate whether the tag is authorized, critical for implementing effective access controls in security-sensitive environments.
+```cpp
+bool EmployeesDatabase::handleRfidReceived(const QString &rfid) {
+    bool isMatch = false;
+    for (const Employee &employee : employeesVector_) {
+        if (employee.checkRFIDTagMatched(rfid)) {
+            isMatch = true;
+            break;
+        }
+    }
+
+    return isMatch;
+}
+```
+This class is a foundational component of the system's security infrastructure, handling the crucial task of RFID-based employee authentication.
+
+#### `main.cpp`
+The `main` function of the application serves as the entry point, initializing and running the HTTP server that forms the core of the system's network interactions.
+
+- **Configuration**:
+  - **Files**: Configures paths to crucial data files (`employees.json`, `admins.json`, `history.json`), ensuring the server has access to essential data for operations.
+```cpp
+const QString USERS_FILE_PATH = "../../data/employees.json";
+const QString ADMINS_FILE_PATH = "../../data/admins.json";
+const QString HISTORY_FILE_PATH = "../../data/history.json";
+```
+  - **Port**: Sets the server to listen on HTTP standard port 80, facilitating easy access via standard web protocols.
+```cpp
+const int HTTP_SERVER_PORT = 80;
+```
+- **Execution**:
+```cpp
+int main(int argc, char *argv[])
+{
+    QCoreApplication app(argc, argv);
+
+    CustomizedHttpServer customizedHttpServer = CustomizedHttpServer(HTTP_SERVER_PORT, USERS_FILE_PATH);
+    
+
+    qInfo("Server running on port 80");
+    return app.exec();
+}
+```
+  - **Server Initialization**: A `CustomizedHttpServer` instance is created and started with predefined settings, including the port and user data file path.
+  - **Running State Notification**: Outputs a log message to confirm the server's operational status, helping in diagnostics and monitoring.
+  - **Event Loop**: Enters the Qt event loop, which is crucial for processing incoming network requests and internal events, maintaining the server's responsiveness.
+
+This setup demonstrates a straightforward, robust server initialization and execution strategy, leveraging Qt's capabilities for effective network communication and event handling within a server environment.
+
+### Data Folder
+Contains JSON files used for initial data setup and storage, facilitating quick data retrieval and management.
+1. `admins.json`
+- **Content**: Stores administrative user details necessary for system management.
+2. `employees.json`
+- **Content**: Contains employee records that populate the `EmployeesDatabase`.
+3. `history.json`
+- **Content**: Logs entry and access history.
+
+### Server Response Examples
+The following screenshots demonstrate the server's response to various RFID tag requests via a simulated HTTP client. These tests verify that the server correctly identifies authorized and unauthorized access attempts based on RFID data.
+
+#### Authorized Access
+Here, the server successfully recognizes an authorized RFID tag, returning a `200 OK` status, indicating the request is authorized:
+![Authorized Access](CA1/Pics/screenshot(server)/success.png)
+
+#### Unauthorized Access
+This screenshot shows the server handling an unauthorized RFID tag, returning a `401 Unauthorized` status, highlighting the security measures in place:
+![Authorized Access](CA1/Pics/screenshot(server)/failed.png)
 
